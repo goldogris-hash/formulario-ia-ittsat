@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js para exportar concentrado en PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- FontAwesome Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -150,7 +152,7 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- VISTA 1: FORMULARIO -->
+        <!-- VISTA 1: FORMULARIO DE RESPUESTA -->
         <section id="view-form" class="space-y-6 max-w-3xl mx-auto">
             
             <div class="glass-card rounded-2xl p-6 border-l-4 border-l-ittsat-green relative overflow-hidden shadow-lg">
@@ -170,7 +172,7 @@
 
             <form id="poll-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
                 
-                <!-- CAPTURA DE DATOS -->
+                <!-- CAPTURA DE DATOS PERSONALES -->
                 <div class="glass-card rounded-2xl p-6 space-y-4 border border-slate-800">
                     <h2 class="text-lg font-semibold text-white border-b border-slate-800 pb-2 flex items-center justify-between">
                         <span><i class="fa-solid fa-user-graduate text-ittsat-gold mr-2"></i>Datos del Participante</span>
@@ -185,7 +187,7 @@
 
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Correo Institucional / Personal *</label>
-                            <input type="email" id="user_email" required placeholder="alumno@ittsAT.edu.mx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan transition">
+                            <input type="email" id="user_email" required placeholder="alumno@ittsat.edu.mx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan transition">
                         </div>
 
                         <div>
@@ -225,7 +227,7 @@
             </form>
         </section>
 
-        <!-- VISTA 2: DASHBOARD -->
+        <!-- VISTA 2: DASHBOARD Y EDICIÓN -->
         <section id="view-admin" class="hidden space-y-8">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div>
@@ -246,8 +248,9 @@
                 </div>
             </div>
 
-            <!-- DASHBOARD DE ANALÍTICAS -->
+            <!-- SUB-TAB 1: DASHBOARD DE ANALÍTICAS -->
             <div id="admin-dash-content" class="space-y-6">
+                <!-- Tarjetas KPI -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-ittsat-green/20 text-ittsat-green flex items-center justify-center text-xl">
@@ -290,6 +293,7 @@
                     </div>
                 </div>
 
+                <!-- Gráficos -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col">
                         <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -310,14 +314,15 @@
                     </div>
                 </div>
 
+                <!-- Histórico de Registros con Exportación PDF -->
                 <div class="glass-card rounded-2xl border border-slate-800 p-5 space-y-4">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <h3 class="text-base font-semibold text-white flex items-center gap-2">
                             <i class="fa-solid fa-table text-ittsat-gold"></i> Histórico de Registros
                         </h3>
                         <div class="flex gap-2">
-                            <button onclick="exportToCSV()" class="px-3.5 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
-                                <i class="fa-solid fa-file-excel"></i> Exportar CSV
+                            <button onclick="exportToPDF()" class="px-3.5 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
+                                <i class="fa-solid fa-file-pdf"></i> Exportar PDF Concentrado
                             </button>
                             <button onclick="clearResponses()" class="px-3.5 py-1.5 rounded-lg bg-rose-600/20 text-rose-400 hover:bg-rose-600/30 border border-rose-500/30 text-xs font-semibold flex items-center gap-1.5 transition">
                                 <i class="fa-solid fa-trash-can"></i> Limpiar Local
@@ -343,14 +348,16 @@
                 </div>
             </div>
 
-            <!-- GESTOR DE PREGUNTAS -->
+            <!-- SUB-TAB 2: GESTOR COMPLETO DE PREGUNTAS -->
             <div id="admin-builder-content" class="hidden space-y-6">
                 <div class="flex items-center justify-between bg-slate-900 p-4 rounded-xl border border-slate-800">
-                    <span class="text-sm text-slate-300 font-medium">Añade o modifica los reactivos del cuestionario.</span>
+                    <span class="text-sm text-slate-300 font-medium">Añade o modifica los reactivos del cuestionario y configura sus opciones.</span>
                     <button onclick="addNewQuestion()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-ai-purple to-ai-blue text-white font-semibold text-xs flex items-center gap-2 hover:opacity-90 shadow-md">
                         <i class="fa-solid fa-plus"></i> Nueva Pregunta
                     </button>
                 </div>
+
+                <!-- Contenedor con edicion dinama de preguntas -->
                 <div id="admin-questions-list" class="space-y-4"></div>
             </div>
         </section>
@@ -368,6 +375,50 @@
         </div>
     </footer>
 
+    <!-- PLANTILLA OCULTA PARA EL REPORTE EN PDF -->
+    <div id="pdf-report-template" class="hidden p-8 bg-white text-slate-900 font-sans">
+        <div class="border-b-2 border-emerald-700 pb-4 mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold text-emerald-800">INSTITUTO TECNOLÓGICO SUPERIOR DE SAN ANDRÉS TUXTLA</h1>
+                <h2 class="text-sm font-semibold text-slate-700">Carrera de Ingeniería Ambiental — Reporte Concentrado de IA</h2>
+            </div>
+            <div class="text-right text-xs text-slate-500">
+                <p id="pdf-date"></p>
+                <p>Base de Datos Supabase</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mb-6 text-center text-xs">
+            <div class="p-3 bg-slate-100 rounded border">
+                <p class="text-slate-500">Total Encuestados</p>
+                <p id="pdf-kpi-total" class="text-lg font-bold text-emerald-700">0</p>
+            </div>
+            <div class="p-3 bg-slate-100 rounded border">
+                <p class="text-slate-500">% Uso Frecuente</p>
+                <p id="pdf-kpi-frec" class="text-lg font-bold text-emerald-700">0%</p>
+            </div>
+            <div class="p-3 bg-slate-100 rounded border">
+                <p class="text-slate-500">Confianza Media</p>
+                <p id="pdf-kpi-conf" class="text-lg font-bold text-emerald-700">0.0</p>
+            </div>
+        </div>
+
+        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b pb-1">Concentrado General de Respuestas</h3>
+        <table class="w-full text-left text-[11px] border-collapse mb-4">
+            <thead>
+                <tr class="bg-slate-200 text-slate-700 uppercase text-[9px]">
+                    <th class="p-2 border">#</th>
+                    <th class="p-2 border">Nombre</th>
+                    <th class="p-2 border">Correo</th>
+                    <th class="p-2 border">Semestre</th>
+                    <th class="p-2 border">Nivel IA</th>
+                    <th class="p-2 border">Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="pdf-table-body"></tbody>
+        </table>
+    </div>
+
     <!-- NOTIFICACIÓN TOAST -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none glass-card border border-emerald-500/50 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
         <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
@@ -380,13 +431,13 @@
     <!-- JAVASCRIPT -->
     <script>
         /* ===================================================
-           1. CONFIGURACIÓN DE SUPABASE (Tus Claves Insertadas)
+           1. CONFIGURACIÓN DE SUPABASE
            =================================================== */
         const SUPABASE_URL = "https://zajkjffzopvbhubprico.supabase.co";
         const SUPABASE_KEY = "sb_publishable_C9f5B8ZJoDsW_ZvmWPLyQA_xGWAGLUj";
 
         /* ===================================================
-           2. ESTADO DE LA APLICACIÓN Y PREGUNTAS
+           2. ESTADO DE LA APLICACIÓN Y PREGUNTAS BASE
            =================================================== */
         let questions = JSON.parse(localStorage.getItem('ittsat_ai_questions')) || [
             {
@@ -414,7 +465,6 @@
                 title: '¿Qué herramientas específicas de IA utilizas con mayor frecuencia?',
                 type: 'checkbox',
                 required: false,
-                isToolQuestion: true,
                 options: [
                     { name: 'ChatGPT', icons: [{ label: 'OpenAI', icon: 'fa-bolt', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' }] },
                     { name: 'Claude / Gemini', icons: [{ label: 'Claude', icon: 'fa-brain', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' }, { label: 'Gemini', icon: 'fa-sparkles', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' }] },
@@ -519,7 +569,7 @@
         function resetCarouselInterval() { clearInterval(slideInterval); startCarouselAutoPlay(); }
 
         /* ===================================================
-           5. RENDERIZADO DEL FORMULARIO CON MINI LOGOS DE IA
+           5. RENDERIZADO PÚBLICO DEL FORMULARIO
            =================================================== */
         function renderDynamicForm() {
             const container = document.getElementById('dynamic-questions-container');
@@ -540,7 +590,7 @@
 
                 if (q.type === 'radio') {
                     html += `<div class="space-y-2 pt-1">`;
-                    q.options.forEach((opt) => {
+                    (q.options || []).forEach((opt) => {
                         const optText = typeof opt === 'object' ? opt.name : opt;
                         html += `
                             <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer border border-slate-800/80 transition">
@@ -553,7 +603,7 @@
                 } 
                 else if (q.type === 'checkbox') {
                     html += `<div class="space-y-2 pt-1">`;
-                    q.options.forEach((opt) => {
+                    (q.options || []).forEach((opt) => {
                         const isObj = typeof opt === 'object';
                         const optText = isObj ? opt.name : opt;
 
@@ -584,8 +634,8 @@
                     html += `
                         <div class="pt-2">
                             <div class="flex justify-between items-center px-2 mb-2 text-[11px] text-slate-400 font-medium">
-                                <span>${q.labelMin || '1'}</span>
-                                <span>${q.labelMax || '5'}</span>
+                                <span>${q.labelMin || '1 (Muy Baja)'}</span>
+                                <span>${q.labelMax || '5 (Alta)'}</span>
                             </div>
                             <div class="grid grid-cols-5 gap-2">
                                 ${[1, 2, 3, 4, 5].map(num => `
@@ -601,7 +651,7 @@
                 else if (q.type === 'text') {
                     html += `
                         <div class="pt-1">
-                            <textarea name="${q.id}" rows="3" ${q.required ? 'required' : ''} placeholder="${q.placeholder || 'Respuesta abierta...'}" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan transition"></textarea>
+                            <textarea name="${q.id}" rows="3" ${q.required ? 'required' : ''} placeholder="${q.placeholder || 'Escribe aquí tu respuesta...'}" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan transition"></textarea>
                         </div>
                     `;
                 }
@@ -612,7 +662,7 @@
         }
 
         /* ===================================================
-           6. CAPTURA Y CONEXIÓN DIRECTA CON SUPABASE
+           6. ENVÍO Y GUARDADO EN LA BASE DE DATOS (SUPABASE)
            =================================================== */
         async function handleFormSubmit(event) {
             event.preventDefault();
@@ -671,9 +721,9 @@
                         creado_el: new Date().toISOString()
                     })
                 });
-                if(res.ok) console.log('Enviado a Supabase correctamente.');
+                if(res.ok) console.log('Sincronizado con Supabase.');
             } catch (err) {
-                console.warn('Error de envío en segundo plano:', err);
+                console.warn('Error al guardar en Supabase:', err);
             }
         }
 
@@ -704,12 +754,12 @@
                     }
                 }
             } catch (e) {
-                console.log('Cargando respaldo local.');
+                console.log('Utilizando respaldo local de respuestas.');
             }
         }
 
         /* ===================================================
-           7. DASHBOARD & GRÁFICOS
+           7. DASHBOARD & EXPORTACIÓN A PDF
            =================================================== */
         function updateDashboard() {
             const total = responses.length;
@@ -814,25 +864,57 @@
                     <td class="p-3 font-semibold text-white">${r.userData.name}</td>
                     <td class="p-3 text-slate-400">${r.userData.email}</td>
                     <td class="p-3"><span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] border border-slate-700">${r.userData.semester}</span></td>
-                    <td class="p-3 text-ai-cyan">${r.userData.aiLevel.split(' ')[0]}</td>
+                    <td class="p-3 text-ai-cyan">${(r.userData.aiLevel || '').split(' ')[0]}</td>
                     <td class="p-3 text-slate-500 text-[10px]">${r.date}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function exportToCSV() {
-            if (responses.length === 0) return showToast('Aviso', 'No hay datos para exportar', 'error');
-            let csv = 'ID,Nombre,Email,Semestre,Nivel_IA,Fecha\n';
-            responses.forEach(r => { csv += `"${r.id}","${r.userData.name}","${r.userData.email}","${r.userData.semester}","${r.userData.aiLevel}","${r.date}"\n`; });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', `IA_Ing_Ambiental_ITTSAT.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Exportado', 'Archivo CSV descargado con éxito.', 'success');
+        /* GENERACIÓN Y DESCARGA DEL CONCENTRADO EN PDF */
+        function exportToPDF() {
+            if (responses.length === 0) {
+                return showToast('Aviso', 'No hay datos guardados para exportar.', 'error');
+            }
+
+            // Poblar plantilla PDF
+            document.getElementById('pdf-date').textContent = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('pdf-kpi-total').textContent = responses.length;
+            document.getElementById('pdf-kpi-frec').textContent = document.getElementById('kpi-frecuencia').textContent;
+            document.getElementById('pdf-kpi-conf').textContent = document.getElementById('kpi-confianza').textContent;
+
+            const pdfTbody = document.getElementById('pdf-table-body');
+            pdfTbody.innerHTML = '';
+
+            responses.forEach((r, i) => {
+                const row = document.createElement('tr');
+                row.className = i % 2 === 0 ? 'bg-white' : 'bg-slate-50';
+                row.innerHTML = `
+                    <td class="p-2 border font-bold">${i + 1}</td>
+                    <td class="p-2 border font-semibold">${r.userData.name}</td>
+                    <td class="p-2 border text-slate-600">${r.userData.email}</td>
+                    <td class="p-2 border">${r.userData.semester}</td>
+                    <td class="p-2 border">${r.userData.aiLevel}</td>
+                    <td class="p-2 border text-slate-500">${r.date}</td>
+                `;
+                pdfTbody.appendChild(row);
+            });
+
+            const element = document.getElementById('pdf-report-template');
+            element.classList.remove('hidden');
+
+            const opt = {
+                margin:       10,
+                filename:     `Concentrado_IA_Ing_Ambiental_ITTSAT_${Date.now()}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.add('hidden');
+                showToast('PDF Generado', 'Concentrado descargado con éxito.', 'success');
+            });
         }
 
         function clearResponses() {
@@ -845,14 +927,37 @@
         }
 
         /* ===================================================
-           8. ADMINISTRADOR DE PREGUNTAS Y TOAST
+           8. ADMINISTRADOR COMPLETO DE PREGUNTAS Y TIPOS DE RESPUESTAS
            =================================================== */
         function renderAdminQuestionsList() {
             const container = document.getElementById('admin-questions-list');
             container.innerHTML = '';
+
             questions.forEach((q, index) => {
                 const box = document.createElement('div');
                 box.className = "glass-card p-5 rounded-2xl border border-slate-800 space-y-4";
+
+                let optionsEditorHtml = '';
+                if (q.type === 'radio' || q.type === 'checkbox') {
+                    optionsEditorHtml = `
+                        <div class="space-y-2 pt-2 border-t border-slate-800/80">
+                            <label class="block text-xs font-semibold text-slate-300">Opciones de Respuesta:</label>
+                            <div class="space-y-2">
+                                ${(q.options || []).map((opt, oIdx) => {
+                                    const optVal = typeof opt === 'object' ? opt.name : opt;
+                                    return `
+                                        <div class="flex items-center gap-2">
+                                            <input type="text" value="${optVal}" onchange="updateQuestionOption('${q.id}', ${oIdx}, this.value)" class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+                                            <button onclick="removeQuestionOption('${q.id}', ${oIdx})" class="px-2 py-1 bg-rose-600/20 text-rose-400 hover:bg-rose-600/30 rounded text-xs"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <button onclick="addQuestionOption('${q.id}')" class="text-xs text-ai-cyan hover:underline font-medium mt-1 inline-flex items-center gap-1"><i class="fa-solid fa-plus"></i> Añadir Opción</button>
+                        </div>
+                    `;
+                }
+
                 box.innerHTML = `
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
                         <span class="text-xs font-bold text-ittsat-gold">Pregunta #${index + 1}</span>
@@ -860,19 +965,116 @@
                             <i class="fa-solid fa-trash-can mr-1"></i> Eliminar
                         </button>
                     </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 mb-1">Título de la pregunta:</label>
-                        <input type="text" value="${q.title}" onchange="updateQuestionTitle('${q.id}', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white">
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">Título de la pregunta:</label>
+                            <input type="text" value="${q.title}" onchange="updateQuestionTitle('${q.id}', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Tipo de Respuesta:</label>
+                                <select onchange="updateQuestionType('${q.id}', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+                                    <option value="radio" ${q.type === 'radio' ? 'selected' : ''}>Opción Única (Radio)</option>
+                                    <option value="checkbox" ${q.type === 'checkbox' ? 'selected' : ''}>Selección Múltiple (Casillas)</option>
+                                    <option value="scale" ${q.type === 'scale' ? 'selected' : ''}>Escala de Valoración (1 a 5)</option>
+                                    <option value="text" ${q.type === 'text' ? 'selected' : ''}>Texto Abierto</option>
+                                </select>
+                            </div>
+
+                            <div class="flex items-center pt-3">
+                                <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                                    <input type="checkbox" ${q.required ? 'checked' : ''} onchange="toggleQuestionRequired('${q.id}', this.checked)" class="rounded text-emerald-500 bg-slate-900">
+                                    <span>Obligatoria</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        ${optionsEditorHtml}
                     </div>
                 `;
                 container.appendChild(box);
             });
         }
 
-        function saveQuestionsState() { localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions)); renderDynamicForm(); }
-        function addNewQuestion() { questions.push({ id: 'q_' + Date.now(), title: 'Nueva pregunta sobre IA', type: 'radio', required: false, options: ['Opción 1', 'Opción 2'] }); saveQuestionsState(); renderAdminQuestionsList(); }
-        function deleteQuestion(id) { questions = questions.filter(q => q.id !== id); saveQuestionsState(); renderAdminQuestionsList(); }
-        function updateQuestionTitle(id, val) { const q = questions.find(item => item.id === id); if (q) { q.title = val; saveQuestionsState(); } }
+        function saveQuestionsState() { 
+            localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions)); 
+            renderDynamicForm(); 
+        }
+
+        function addNewQuestion() { 
+            questions.push({ 
+                id: 'q_' + Date.now(), 
+                title: 'Nueva pregunta personalizada sobre IA', 
+                type: 'radio', 
+                required: false, 
+                options: ['Opción 1', 'Opción 2'] 
+            }); 
+            saveQuestionsState(); 
+            renderAdminQuestionsList(); 
+            showToast('Creada', 'Nueva pregunta añadida al formulario.', 'success');
+        }
+
+        function deleteQuestion(id) { 
+            questions = questions.filter(q => q.id !== id); 
+            saveQuestionsState(); 
+            renderAdminQuestionsList(); 
+            showToast('Eliminada', 'Pregunta removida correctamente.', 'success');
+        }
+
+        function updateQuestionTitle(id, val) { 
+            const q = questions.find(item => item.id === id); 
+            if (q) { q.title = val; saveQuestionsState(); } 
+        }
+
+        function updateQuestionType(id, type) {
+            const q = questions.find(item => item.id === id);
+            if (q) {
+                q.type = type;
+                if ((type === 'radio' || type === 'checkbox') && (!q.options || q.options.length === 0)) {
+                    q.options = ['Opción A', 'Opción B'];
+                }
+                saveQuestionsState();
+                renderAdminQuestionsList();
+            }
+        }
+
+        function toggleQuestionRequired(id, val) {
+            const q = questions.find(item => item.id === id);
+            if (q) { q.required = val; saveQuestionsState(); }
+        }
+
+        function updateQuestionOption(qId, oIdx, val) {
+            const q = questions.find(item => item.id === qId);
+            if (q && q.options) {
+                if (typeof q.options[oIdx] === 'object') {
+                    q.options[oIdx].name = val;
+                } else {
+                    q.options[oIdx] = val;
+                }
+                saveQuestionsState();
+            }
+        }
+
+        function addQuestionOption(qId) {
+            const q = questions.find(item => item.id === qId);
+            if (q) {
+                if (!q.options) q.options = [];
+                q.options.push(`Nueva Opción ${q.options.length + 1}`);
+                saveQuestionsState();
+                renderAdminQuestionsList();
+            }
+        }
+
+        function removeQuestionOption(qId, oIdx) {
+            const q = questions.find(item => item.id === qId);
+            if (q && q.options && q.options.length > 1) {
+                q.options.splice(oIdx, 1);
+                saveQuestionsState();
+                renderAdminQuestionsList();
+            }
+        }
 
         function showToast(title, msg, type = 'success') {
             const toast = document.getElementById('toast');
