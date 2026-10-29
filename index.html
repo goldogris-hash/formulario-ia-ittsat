@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2pdf.js para exportar concentrado en PDF -->
+    <!-- html2pdf.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- FontAwesome Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -84,7 +84,7 @@
                         <span>Responder</span>
                     </button>
                     <button id="tab-admin" onclick="switchView('admin')" class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
-                        <i class="fa-solid fa-chart-line"></i>
+                        <i class="fa-solid fa-lock text-xs text-ittsat-gold"></i>
                         <span>Dashboard & Edición</span>
                     </button>
                 </nav>
@@ -101,9 +101,7 @@
     <!-- BANNER CARRUSEL SUPERIOR -->
     <section class="relative max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 pb-2">
         <div id="carousel" class="relative h-48 sm:h-64 md:h-72 w-full overflow-hidden rounded-2xl border border-slate-800 shadow-2xl group">
-            
             <div id="carousel-slides" class="h-full flex transition-transform duration-700 ease-out">
-                <!-- Slide 1 -->
                 <div class="min-w-full h-full relative">
                     <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80" alt="IA y Sensores" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-6">
@@ -113,7 +111,6 @@
                     </div>
                 </div>
 
-                <!-- Slide 2 -->
                 <div class="min-w-full h-full relative">
                     <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80" alt="Modelado Climático" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-6">
@@ -123,7 +120,6 @@
                     </div>
                 </div>
 
-                <!-- Slide 3 -->
                 <div class="min-w-full h-full relative">
                     <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80" alt="Estudiantes ITTSAT" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-6">
@@ -152,9 +148,8 @@
     <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
 
-        <!-- VISTA 1: FORMULARIO DE RESPUESTA -->
+        <!-- VISTA 1: FORMULARIO -->
         <section id="view-form" class="space-y-6 max-w-3xl mx-auto">
-            
             <div class="glass-card rounded-2xl p-6 border-l-4 border-l-ittsat-green relative overflow-hidden shadow-lg">
                 <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gradient-to-br from-ittsat-green/20 to-ai-cyan/20 rounded-full blur-2xl pointer-events-none"></div>
                 <h1 class="text-2xl font-bold text-white flex items-center gap-2">
@@ -171,8 +166,6 @@
             </div>
 
             <form id="poll-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
-                
-                <!-- CAPTURA DE DATOS PERSONALES -->
                 <div class="glass-card rounded-2xl p-6 space-y-4 border border-slate-800">
                     <h2 class="text-lg font-semibold text-white border-b border-slate-800 pb-2 flex items-center justify-between">
                         <span><i class="fa-solid fa-user-graduate text-ittsat-gold mr-2"></i>Datos del Participante</span>
@@ -214,10 +207,8 @@
                     </div>
                 </div>
 
-                <!-- PREGUNTAS DINÁMICAS -->
                 <div id="dynamic-questions-container" class="space-y-6"></div>
 
-                <!-- BOTÓN DE ENVÍO -->
                 <div class="pt-2 flex justify-end">
                     <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-ittsat-green via-emerald-600 to-ai-cyan hover:from-emerald-600 hover:to-ai-cyan text-slate-950 font-bold text-base shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2">
                         <i class="fa-solid fa-paper-plane"></i>
@@ -248,9 +239,7 @@
                 </div>
             </div>
 
-            <!-- SUB-TAB 1: DASHBOARD DE ANALÍTICAS -->
             <div id="admin-dash-content" class="space-y-6">
-                <!-- Tarjetas KPI -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="glass-card p-5 rounded-2xl border border-slate-800 flex items-center gap-4">
                         <div class="w-12 h-12 rounded-xl bg-ittsat-green/20 text-ittsat-green flex items-center justify-center text-xl">
@@ -293,7 +282,6 @@
                     </div>
                 </div>
 
-                <!-- Gráficos -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col">
                         <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -314,7 +302,6 @@
                     </div>
                 </div>
 
-                <!-- Histórico de Registros con Exportación PDF -->
                 <div class="glass-card rounded-2xl border border-slate-800 p-5 space-y-4">
                     <div class="flex flex-wrap items-center justify-between gap-4">
                         <h3 class="text-base font-semibold text-white flex items-center gap-2">
@@ -348,7 +335,6 @@
                 </div>
             </div>
 
-            <!-- SUB-TAB 2: GESTOR COMPLETO DE PREGUNTAS -->
             <div id="admin-builder-content" class="hidden space-y-6">
                 <div class="flex items-center justify-between bg-slate-900 p-4 rounded-xl border border-slate-800">
                     <span class="text-sm text-slate-300 font-medium">Añade o modifica los reactivos del cuestionario y configura sus opciones.</span>
@@ -356,8 +342,6 @@
                         <i class="fa-solid fa-plus"></i> Nueva Pregunta
                     </button>
                 </div>
-
-                <!-- Contenedor con edicion dinama de preguntas -->
                 <div id="admin-questions-list" class="space-y-4"></div>
             </div>
         </section>
@@ -375,48 +359,95 @@
         </div>
     </footer>
 
-    <!-- PLANTILLA OCULTA PARA EL REPORTE EN PDF -->
-    <div id="pdf-report-template" class="hidden p-8 bg-white text-slate-900 font-sans">
-        <div class="border-b-2 border-emerald-700 pb-4 mb-6 flex justify-between items-center">
+    <!-- MODAL DE AUTENTICACIÓN / CONTRASEÑA ADMIN -->
+    <div id="modal-auth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full rounded-2xl border border-slate-700 p-6 shadow-2xl space-y-4 text-center relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 rounded-2xl bg-ittsat-gold/20 text-ittsat-gold flex items-center justify-center mx-auto text-xl border border-ittsat-gold/30">
+                <i class="fa-solid fa-lock"></i>
+            </div>
             <div>
-                <h1 class="text-xl font-bold text-emerald-800">INSTITUTO TECNOLÓGICO SUPERIOR DE SAN ANDRÉS TUXTLA</h1>
-                <h2 class="text-sm font-semibold text-slate-700">Carrera de Ingeniería Ambiental — Reporte Concentrado de IA</h2>
+                <h3 class="font-bold text-white text-base">Acceso Restringido</h3>
+                <p class="text-slate-400 text-xs mt-1">Introduce la contraseña para acceder al panel de administración.</p>
             </div>
-            <div class="text-right text-xs text-slate-500">
-                <p id="pdf-date"></p>
-                <p>Base de Datos Supabase</p>
+            <div>
+                <input type="password" id="admin-pass-input" placeholder="Contraseña..." onkeyup="if(event.key==='Enter') verifyAdminPass()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-center text-white focus:outline-none focus:border-ai-cyan transition">
+            </div>
+            <div class="flex gap-2">
+                <button onclick="closeAuthModal()" class="w-1/2 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">Cancelar</button>
+                <button onclick="verifyAdminPass()" class="w-1/2 py-2 rounded-xl bg-gradient-to-r from-ittsat-green to-emerald-600 text-white text-xs font-bold shadow-lg">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR FUERA DE PANTALLA PARA GENERACIÓN DE PDF COLORIDO -->
+    <div id="pdf-container-wrapper" class="fixed left-[-9999px] top-0 w-[800px] bg-slate-50 text-slate-900 font-sans p-8">
+        
+        <!-- HEADER INSTITUCIONAL DEL PDF CON DEGRADADO ITTSAT -->
+        <div class="rounded-xl p-6 text-white mb-6 shadow-md" style="background: linear-gradient(135deg, #0f5132 0%, #1e1b4b 60%, #6b1d2f 100%);">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow">
+                        <svg class="w-8 h-8 text-[#0f5132]" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM3.89 9L12 4.57 20.11 9 12 13.43 3.89 9zM12 16.22l-6.32-3.45L4 13.68l8 4.37 8-4.37-1.68-.91L12 16.22z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-wide uppercase">ITTSAT</h1>
+                        <p class="text-[11px] opacity-90">Instituto Tecnológico Superior de San Andrés Tuxtla</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <span class="inline-block px-3 py-1 bg-amber-400 text-slate-950 rounded-full text-[10px] font-bold uppercase tracking-wider mb-1">Ingeniería Ambiental</span>
+                    <p class="text-[10px] opacity-80" id="pdf-gen-date"></p>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-4 mb-6 text-center text-xs">
-            <div class="p-3 bg-slate-100 rounded border">
-                <p class="text-slate-500">Total Encuestados</p>
-                <p id="pdf-kpi-total" class="text-lg font-bold text-emerald-700">0</p>
+        <!-- TÍTULO DEL DOCUMENTO -->
+        <div class="mb-6 border-b-2 border-slate-200 pb-3">
+            <h2 class="text-xl font-bold text-slate-800">Concentrado General de Registros — Uso de la IA</h2>
+            <p class="text-xs text-slate-500 mt-1">Diagnóstico académico sobre la adopción de herramientas de Inteligencia Artificial.</p>
+        </div>
+
+        <!-- RESUMEN KPI -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-center">
+                <span class="text-[10px] uppercase font-bold text-emerald-800">Total Participantes</span>
+                <p id="pdf-kpi-total" class="text-xl font-bold text-emerald-900 mt-0.5">0</p>
             </div>
-            <div class="p-3 bg-slate-100 rounded border">
-                <p class="text-slate-500">% Uso Frecuente</p>
-                <p id="pdf-kpi-frec" class="text-lg font-bold text-emerald-700">0%</p>
+            <div class="p-3 bg-sky-50 border border-sky-200 rounded-xl text-center">
+                <span class="text-[10px] uppercase font-bold text-sky-800">% Uso Frecuente</span>
+                <p id="pdf-kpi-frec" class="text-xl font-bold text-sky-900 mt-0.5">0%</p>
             </div>
-            <div class="p-3 bg-slate-100 rounded border">
-                <p class="text-slate-500">Confianza Media</p>
-                <p id="pdf-kpi-conf" class="text-lg font-bold text-emerald-700">0.0</p>
+            <div class="p-3 bg-purple-50 border border-purple-200 rounded-xl text-center">
+                <span class="text-[10px] uppercase font-bold text-purple-800">Confianza Media</span>
+                <p id="pdf-kpi-conf" class="text-xl font-bold text-purple-900 mt-0.5">0.0</p>
             </div>
         </div>
 
-        <h3 class="text-sm font-bold text-slate-800 mb-3 border-b pb-1">Concentrado General de Respuestas</h3>
-        <table class="w-full text-left text-[11px] border-collapse mb-4">
+        <!-- TABLA DE REGISTROS -->
+        <table class="w-full text-left text-xs border-collapse rounded-lg overflow-hidden shadow-sm">
             <thead>
-                <tr class="bg-slate-200 text-slate-700 uppercase text-[9px]">
-                    <th class="p-2 border">#</th>
-                    <th class="p-2 border">Nombre</th>
-                    <th class="p-2 border">Correo</th>
-                    <th class="p-2 border">Semestre</th>
-                    <th class="p-2 border">Nivel IA</th>
-                    <th class="p-2 border">Fecha</th>
+                <tr class="bg-[#0f5132] text-white uppercase text-[9px] tracking-wider">
+                    <th class="p-2.5 border-b border-emerald-800">#</th>
+                    <th class="p-2.5 border-b border-emerald-800">Nombre</th>
+                    <th class="p-2.5 border-b border-emerald-800">Correo</th>
+                    <th class="p-2.5 border-b border-emerald-800">Semestre</th>
+                    <th class="p-2.5 border-b border-emerald-800">Nivel IA</th>
+                    <th class="p-2.5 border-b border-emerald-800">Fecha</th>
                 </tr>
             </thead>
-            <tbody id="pdf-table-body"></tbody>
+            <tbody id="pdf-table-body" class="divide-y divide-slate-200 bg-white"></tbody>
         </table>
+
+        <!-- PIE DE PÁGINA DEL PDF -->
+        <div class="mt-8 pt-4 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400">
+            <p>Sistema de Evaluación ITTSAT &copy; 2026</p>
+            <p>Documento Oficial Generado Automáticamente</p>
+        </div>
     </div>
 
     <!-- NOTIFICACIÓN TOAST -->
@@ -431,10 +462,12 @@
     <!-- JAVASCRIPT -->
     <script>
         /* ===================================================
-           1. CONFIGURACIÓN DE SUPABASE
+           1. CONFIGURACIÓN DE SUPABASE Y CONTRASEÑA ADMIN
            =================================================== */
         const SUPABASE_URL = "https://zajkjffzopvbhubprico.supabase.co";
         const SUPABASE_KEY = "sb_publishable_C9f5B8ZJoDsW_ZvmWPLyQA_xGWAGLUj";
+        const ADMIN_PASSWORD = "admin123"; // Contraseña para acceder a la administración
+        let isAdminAuthenticated = false;
 
         /* ===================================================
            2. ESTADO DE LA APLICACIÓN Y PREGUNTAS BASE
@@ -497,7 +530,7 @@
         let chartImpactoInstance = null;
 
         /* ===================================================
-           3. INICIALIZACIÓN
+           3. INICIALIZACIÓN Y CONTROL DE AUTENTICACIÓN
            =================================================== */
         window.addEventListener('DOMContentLoaded', () => {
             renderDynamicForm();
@@ -517,11 +550,37 @@
                 tabForm.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-gradient-to-r from-ittsat-green to-emerald-600 text-white shadow-md";
                 tabAdmin.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
             } else {
+                if (!isAdminAuthenticated) {
+                    openAuthModal();
+                    return;
+                }
                 formView.classList.add('hidden');
                 adminView.classList.remove('hidden');
                 tabAdmin.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 bg-gradient-to-r from-ittsat-wine to-ai-purple text-white shadow-md";
                 tabForm.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
                 updateDashboard();
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('modal-auth').classList.remove('hidden');
+            document.getElementById('admin-pass-input').focus();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('modal-auth').classList.add('hidden');
+            document.getElementById('admin-pass-input').value = '';
+        }
+
+        function verifyAdminPass() {
+            const input = document.getElementById('admin-pass-input').value;
+            if (input === ADMIN_PASSWORD) {
+                isAdminAuthenticated = true;
+                closeAuthModal();
+                showToast('Acceso Concedido', 'Bienvenido al panel de administración.', 'success');
+                switchView('admin');
+            } else {
+                showToast('Acceso Denegado', 'Contraseña incorrecta.', 'error');
             }
         }
 
@@ -662,7 +721,7 @@
         }
 
         /* ===================================================
-           6. ENVÍO Y GUARDADO EN LA BASE DE DATOS (SUPABASE)
+           6. GUARDADO EN SUPABASE
            =================================================== */
         async function handleFormSubmit(event) {
             event.preventDefault();
@@ -754,12 +813,12 @@
                     }
                 }
             } catch (e) {
-                console.log('Utilizando respaldo local de respuestas.');
+                console.log('Utilizando respaldo local.');
             }
         }
 
         /* ===================================================
-           7. DASHBOARD & EXPORTACIÓN A PDF
+           7. DASHBOARD & GENERACIÓN DE PDF COLORIDO Y ORDENADO
            =================================================== */
         function updateDashboard() {
             const total = responses.length;
@@ -871,14 +930,14 @@
             });
         }
 
-        /* GENERACIÓN Y DESCARGA DEL CONCENTRADO EN PDF */
+        /* GENERACIÓN DEL REPORTE PDF COLORIDO Y COMPLETO */
         function exportToPDF() {
             if (responses.length === 0) {
-                return showToast('Aviso', 'No hay datos guardados para exportar.', 'error');
+                return showToast('Aviso', 'No hay registros para exportar.', 'error');
             }
 
-            // Poblar plantilla PDF
-            document.getElementById('pdf-date').textContent = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+            // Poblar datos en la plantilla renderizada
+            document.getElementById('pdf-gen-date').textContent = `Fecha: ${new Date().toLocaleDateString('es-MX')}`;
             document.getElementById('pdf-kpi-total').textContent = responses.length;
             document.getElementById('pdf-kpi-frec').textContent = document.getElementById('kpi-frecuencia').textContent;
             document.getElementById('pdf-kpi-conf').textContent = document.getElementById('kpi-confianza').textContent;
@@ -890,30 +949,33 @@
                 const row = document.createElement('tr');
                 row.className = i % 2 === 0 ? 'bg-white' : 'bg-slate-50';
                 row.innerHTML = `
-                    <td class="p-2 border font-bold">${i + 1}</td>
-                    <td class="p-2 border font-semibold">${r.userData.name}</td>
-                    <td class="p-2 border text-slate-600">${r.userData.email}</td>
-                    <td class="p-2 border">${r.userData.semester}</td>
-                    <td class="p-2 border">${r.userData.aiLevel}</td>
-                    <td class="p-2 border text-slate-500">${r.date}</td>
+                    <td class="p-2.5 border-b border-slate-200 font-bold text-slate-600">${i + 1}</td>
+                    <td class="p-2.5 border-b border-slate-200 font-semibold text-slate-900">${r.userData.name}</td>
+                    <td class="p-2.5 border-b border-slate-200 text-slate-600">${r.userData.email}</td>
+                    <td class="p-2.5 border-b border-slate-200 text-slate-700 font-medium">${r.userData.semester}</td>
+                    <td class="p-2.5 border-b border-slate-200"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold">${(r.userData.aiLevel || 'Básico').split(' ')[0]}</span></td>
+                    <td class="p-2.5 border-b border-slate-200 text-slate-500 text-[10px]">${r.date}</td>
                 `;
                 pdfTbody.appendChild(row);
             });
 
-            const element = document.getElementById('pdf-report-template');
-            element.classList.remove('hidden');
+            const element = document.getElementById('pdf-container-wrapper');
 
             const opt = {
-                margin:       10,
-                filename:     `Concentrado_IA_Ing_Ambiental_ITTSAT_${Date.now()}.pdf`,
+                margin:       [10, 10, 10, 10],
+                filename:     `Concentrado_IA_ITTSAT_${Date.now()}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
+            showToast('Generando PDF', 'Procesando diseño colorido del reporte...', 'success');
+
             html2pdf().set(opt).from(element).save().then(() => {
-                element.classList.add('hidden');
-                showToast('PDF Generado', 'Concentrado descargado con éxito.', 'success');
+                showToast('Descargado', 'PDF guardado con éxito.', 'success');
+            }).catch(err => {
+                console.error(err);
+                showToast('Error', 'No se pudo generar el archivo PDF.', 'error');
             });
         }
 
@@ -927,7 +989,7 @@
         }
 
         /* ===================================================
-           8. ADMINISTRADOR COMPLETO DE PREGUNTAS Y TIPOS DE RESPUESTAS
+           8. ADMINISTRADOR COMPLETO DE PREGUNTAS
            =================================================== */
         function renderAdminQuestionsList() {
             const container = document.getElementById('admin-questions-list');
