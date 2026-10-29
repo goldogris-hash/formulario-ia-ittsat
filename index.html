@@ -185,7 +185,7 @@
 
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Correo Institucional / Personal *</label>
-                            <input type="email" id="user_email" required placeholder="alumno@ittsat.edu.mx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan transition">
+                            <input type="email" id="user_email" required placeholder="alumno@ittsAT.edu.mx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan transition">
                         </div>
 
                         <div>
@@ -380,10 +380,10 @@
     <!-- JAVASCRIPT -->
     <script>
         /* ===================================================
-           1. CONFIGURACIÓN SILENCIOSA Y PRIVADA DE SUPABASE
+           1. CONFIGURACIÓN DE SUPABASE (Tus Claves Insertadas)
            =================================================== */
         const SUPABASE_URL = "https://zajkjffzopvbhubprico.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphamtqZmZ6b3B2Ymh1YnByaWNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxNzc1NTAsImV4cCI6MjA1NTc1MzU1MH0.dZ2-Nq1OslE8xOQW0g6jCg1X-fJ-9cM8Z"; // Tu Anon Public Key obtenida del proyecto
+        const SUPABASE_KEY = "sb_publishable_C9f5B8ZJoDsW_ZvmWPLyQA_xGWAGLUj";
 
         /* ===================================================
            2. ESTADO DE LA APLICACIÓN Y PREGUNTAS
@@ -414,7 +414,7 @@
                 title: '¿Qué herramientas específicas de IA utilizas con mayor frecuencia?',
                 type: 'checkbox',
                 required: false,
-                isToolQuestion: true, // Marca especial para renderizar badges e iconos
+                isToolQuestion: true,
                 options: [
                     { name: 'ChatGPT', icons: [{ label: 'OpenAI', icon: 'fa-bolt', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' }] },
                     { name: 'Claude / Gemini', icons: [{ label: 'Claude', icon: 'fa-brain', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' }, { label: 'Gemini', icon: 'fa-sparkles', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' }] },
@@ -557,7 +557,6 @@
                         const isObj = typeof opt === 'object';
                         const optText = isObj ? opt.name : opt;
 
-                        // Generar Badges / Mini logos si existen
                         let badgesHtml = '';
                         if (isObj && opt.icons) {
                             badgesHtml = `<div class="flex items-center gap-1.5 ml-auto">`;
@@ -613,7 +612,7 @@
         }
 
         /* ===================================================
-           6. CAPTURA Y CONEXIÓN INDIRECTA CON SUPABASE
+           6. CAPTURA Y CONEXIÓN DIRECTA CON SUPABASE
            =================================================== */
         async function handleFormSubmit(event) {
             event.preventDefault();
@@ -643,11 +642,9 @@
                 }
             });
 
-            // Guardar local
             responses.push(newResponse);
             localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses));
 
-            // Enviar en segundo plano a Supabase
             await sendToSupabaseSilently(newResponse);
 
             showToast('¡Respuesta Registrada!', 'Guardada correctamente en la Base de Datos.', 'success');
@@ -674,7 +671,6 @@
                         creado_el: new Date().toISOString()
                     })
                 });
-                
                 if(res.ok) console.log('Enviado a Supabase correctamente.');
             } catch (err) {
                 console.warn('Error de envío en segundo plano:', err);
@@ -692,7 +688,6 @@
                 if (res.ok) {
                     const data = await res.json();
                     if(data && data.length > 0) {
-                        // Mapear datos de Supabase
                         responses = data.map(item => ({
                             id: item.id || 'res_' + Date.now(),
                             date: new Date(item.creado_el || Date.now()).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
