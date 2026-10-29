@@ -64,10 +64,9 @@
 </head>
 <body class="font-sans antialiased min-h-full flex flex-col bg-slate-950 text-slate-100 selection:bg-ai-cyan selection:text-slate-900">
 
-    <!-- PANTALLA DE BIENVENIDA (SPLASH MOBILE-FRIENDLY) -->
+    <!-- PANTALLA DE BIENVENIDA (SPLASH) -->
     <div id="intro-splash" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-4 text-center transition-all duration-700">
         <div class="relative max-w-sm w-full glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl flex flex-col items-center space-y-5 overflow-hidden">
-            
             <div class="absolute -top-20 -left-20 w-40 h-40 bg-ittsat-green/30 rounded-full blur-3xl pointer-events-none"></div>
             <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-ai-purple/30 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -92,19 +91,17 @@
                 </p>
             </div>
 
-            <button onclick="startApp()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-ittsat-green via-emerald-600 to-ai-cyan hover:opacity-90 text-slate-950 font-bold text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+            <button onclick="startApp()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-ittsat-green via-emerald-600 to-ai-cyan hover:opacity-90 text-slate-950 font-bold text-sm shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2">
                 <span>Comenzar Encuesta</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
     </div>
 
-    <!-- BARRA DE NAVEGACIÓN PRINCIPAL (RESPONSIVE MÓVIL) -->
+    <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
     <header class="sticky top-0 z-40 glass-card border-b border-slate-800/80 shadow-lg">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-14 sm:h-16 gap-2">
-                
-                <!-- Logo e Identidad -->
                 <div class="flex items-center gap-2 overflow-hidden">
                     <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-ittsat-green via-ittsat-wine to-ai-purple flex items-center justify-center shadow-md p-0.5 shrink-0">
                         <div class="w-full h-full bg-slate-900 rounded-[8px] flex items-center justify-center">
@@ -119,7 +116,6 @@
                     </div>
                 </div>
 
-                <!-- Tabs de Navegación Compactos en Celular -->
                 <nav class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 shrink-0">
                     <button id="tab-form" onclick="switchView('form')" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 bg-gradient-to-r from-ittsat-green to-emerald-600 text-white shadow-md">
                         <i class="fa-solid fa-pen-to-square"></i>
@@ -131,7 +127,6 @@
                     </button>
                 </nav>
 
-                <!-- Estado DB -->
                 <div class="hidden md:flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 px-2.5 py-1 rounded-xl">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span class="font-medium">DB Conectada</span>
@@ -421,7 +416,8 @@
             setTimeout(() => { intro.style.display = 'none'; }, 700);
         }
 
-        let questions = JSON.parse(localStorage.getItem('ittsat_ai_questions')) || [
+        // Lista base predeterminada por si falla la red
+        let defaultQuestions = [
             {
                 id: 'q1',
                 title: '¿Con qué frecuencia utilizas herramientas de Inteligencia Artificial (ChatGPT, Claude, Gemini, DeepSeek, etc.) en tus actividades académicas?',
@@ -460,8 +456,6 @@
                 title: '¿Qué nivel de confianza o precisión le otorgas a los resultados generados por la IA en tus análisis de datos ambientales?',
                 type: 'scale',
                 required: true,
-                scaleMin: 1,
-                scaleMax: 5,
                 labelMin: 'Muy baja',
                 labelMax: 'Alta precisión'
             },
@@ -474,15 +468,78 @@
             }
         ];
 
+        let questions = JSON.parse(localStorage.getItem('ittsat_ai_questions')) || defaultQuestions;
         let responses = JSON.parse(localStorage.getItem('ittsat_ai_responses')) || [];
         let chartFrecuenciaInstance = null;
         let chartImpactoInstance = null;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderDynamicForm();
+        window.addEventListener('DOMContentLoaded', async () => {
             initCarousel();
+            await fetchQuestionsFromSupabase();
             fetchResponsesFromSupabase();
         });
+
+        /* ===================================================
+           SINCRONIZACIÓN DE PREGUNTAS EN SUPABASE (GLOBAL)
+           =================================================== */
+        async function fetchQuestionsFromSupabase() {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia?select=*&order=orden.asc`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        questions = data.map(q => ({
+                            id: q.id,
+                            title: q.title,
+                            type: q.type,
+                            required: q.required,
+                            options: q.options || [],
+                            labelMin: q.label_min,
+                            labelMax: q.label_max,
+                            placeholder: q.placeholder
+                        }));
+                        localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions));
+                    } else {
+                        // Si la tabla está vacía, sembramos las preguntas predeterminadas
+                        await syncAllQuestionsToSupabase();
+                    }
+                }
+            } catch (e) {
+                console.warn('Cargando preguntas locales:', e);
+            }
+            renderDynamicForm();
+        }
+
+        async function syncAllQuestionsToSupabase() {
+            try {
+                // Limpiar y resincronizar la lista completa en la nube
+                await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia?id=gt.0`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+
+                const payload = questions.map(q => ({
+                    id: q.id,
+                    title: q.title,
+                    type: q.type,
+                    required: q.required,
+                    options: q.options || [],
+                    label_min: q.labelMin || null,
+                    label_max: q.labelMax || null,
+                    placeholder: q.placeholder || null
+                }));
+
+                await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+                    body: JSON.stringify(payload)
+                });
+            } catch (err) {
+                console.error('Error al guardar en Supabase:', err);
+            }
+        }
 
         function switchView(view) {
             const formView = document.getElementById('view-form');
@@ -805,15 +862,20 @@
             });
         }
 
-        function saveQuestionsState() { localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions)); renderDynamicForm(); }
-        function addNewQuestion() { questions.push({ id: 'q_' + Date.now(), title: 'Nueva pregunta', type: 'radio', required: false, options: ['Opción 1', 'Opción 2'] }); saveQuestionsState(); renderAdminQuestionsList(); showToast('Creada', 'Añadida.', 'success'); }
-        function deleteQuestion(id) { questions = questions.filter(q => q.id !== id); saveQuestionsState(); renderAdminQuestionsList(); showToast('Eliminada', 'Removida.', 'success'); }
-        function updateQuestionTitle(id, val) { const q = questions.find(i => i.id === id); if (q) { q.title = val; saveQuestionsState(); } }
-        function updateQuestionType(id, type) { const q = questions.find(i => i.id === id); if (q) { q.type = type; if((type==='radio'||type==='checkbox')&&(!q.options||!q.options.length))q.options=['A','B']; saveQuestionsState(); renderAdminQuestionsList(); } }
-        function toggleQuestionRequired(id, val) { const q = questions.find(i => i.id === id); if (q) { q.required = val; saveQuestionsState(); } }
-        function updateQuestionOption(qId, oIdx, val) { const q = questions.find(i => i.id === qId); if (q && q.options) { if (typeof q.options[oIdx] === 'object') q.options[oIdx].name = val; else q.options[oIdx] = val; saveQuestionsState(); } }
-        function addQuestionOption(qId) { const q = questions.find(i => i.id === qId); if (q) { if (!q.options) q.options = []; q.options.push(`Opción ${q.options.length + 1}`); saveQuestionsState(); renderAdminQuestionsList(); } }
-        function removeQuestionOption(qId, oIdx) { const q = questions.find(i => i.id === qId); if (q && q.options && q.options.length > 1) { q.options.splice(oIdx, 1); saveQuestionsState(); renderAdminQuestionsList(); } }
+        async function saveQuestionsState() {
+            localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions));
+            renderDynamicForm();
+            await syncAllQuestionsToSupabase();
+        }
+
+        async function addNewQuestion() { questions.push({ id: 'q_' + Date.now(), title: 'Nueva pregunta', type: 'radio', required: false, options: ['Opción 1', 'Opción 2'] }); await saveQuestionsState(); renderAdminQuestionsList(); showToast('Creada', 'Pregunta guardada globalmente.', 'success'); }
+        async function deleteQuestion(id) { questions = questions.filter(q => q.id !== id); await saveQuestionsState(); renderAdminQuestionsList(); showToast('Eliminada', 'Pregunta removida globalmente.', 'success'); }
+        async function updateQuestionTitle(id, val) { const q = questions.find(i => i.id === id); if (q) { q.title = val; await saveQuestionsState(); } }
+        async function updateQuestionType(id, type) { const q = questions.find(i => i.id === id); if (q) { q.type = type; if((type==='radio'||type==='checkbox')&&(!q.options||!q.options.length))q.options=['A','B']; await saveQuestionsState(); renderAdminQuestionsList(); } }
+        async function toggleQuestionRequired(id, val) { const q = questions.find(i => i.id === id); if (q) { q.required = val; await saveQuestionsState(); } }
+        async function updateQuestionOption(qId, oIdx, val) { const q = questions.find(i => i.id === qId); if (q && q.options) { if (typeof q.options[oIdx] === 'object') q.options[oIdx].name = val; else q.options[oIdx] = val; await saveQuestionsState(); } }
+        async function addQuestionOption(qId) { const q = questions.find(i => i.id === qId); if (q) { if (!q.options) q.options = []; q.options.push(`Opción ${q.options.length + 1}`); await saveQuestionsState(); renderAdminQuestionsList(); } }
+        async function removeQuestionOption(qId, oIdx) { const q = questions.find(i => i.id === qId); if (q && q.options && q.options.length > 1) { q.options.splice(oIdx, 1); await saveQuestionsState(); renderAdminQuestionsList(); } }
 
         function showToast(title, msg, type = 'success') {
             const toast = document.getElementById('toast');
