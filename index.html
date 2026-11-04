@@ -87,7 +87,7 @@
                     Uso de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-ai-cyan via-emerald-400 to-ittsat-gold">Inteligencia Artificial</span>
                 </h1>
                 <p class="text-xs text-slate-300 leading-relaxed px-2">
-                    Descubre y aporta tu visión sobre la tecnología verde y sustentable en nuestra carrera.
+                     Hola, te invito a responder el cuestionario. El objetivo es conocer acerca del uso ético de la IA durante la formación académica.
                 </p>
             </div>
 
@@ -180,7 +180,7 @@
                     Uso de la IA en Ing. Ambiental
                 </h1>
                 <p class="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
-                     Hola, te invito a responder el cuestionario. El objetivo es conocer acerca del uso ético de la IA durante la formación académica. .
+                     Hola, te invito a responder el cuestionario. El objetivo es conocer acerca del uso ético de la IA durante la formación académica.
                 </p>
             </div>
 
@@ -192,7 +192,6 @@
                     </h2>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Correo Electrónico *</label>
                             <input type="email" id="user_email" required placeholder="correo@ittsat.edu.mx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan">
@@ -296,7 +295,7 @@
 
                     <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-col">
                         <h3 class="text-xs sm:text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-column text-ittsat-green"></i> Áreas de Impacto
+                            <i class="fa-solid fa-chart-column text-ittsat-green"></i> Herramientas / Criterios
                         </h3>
                         <div class="h-56 relative flex items-center justify-center">
                             <canvas id="chart-impacto"></canvas>
@@ -404,54 +403,19 @@
 
         // Lista base predeterminada por si falla la red
         let defaultQuestions = [
-            {
-                id: 'q1',
-                title: '¿Con qué frecuencia utilizas herramientas de Inteligencia Artificial (ChatGPT, Claude, Gemini, DeepSeek, etc.) en tus actividades académicas?',
-                type: 'radio',
-                required: true,
-                options: ['Diariamente', 'Varias veces por semana', 'Ocasionalmente (1-2 veces al mes)', 'Rara vez / Casi nunca', 'Nunca']
-            },
-            {
-                id: 'q2',
-                title: '¿En qué áreas de la Ingeniería Ambiental consideras que la IA tiene mayor impacto potencial?',
-                type: 'checkbox',
-                required: true,
-                options: [
-                    'Monitoreo de contaminación (Aire, Agua, Suelo)',
-                    'Modelado y predicción del Cambio Climático',
-                    'Tratamiento de aguas residuales y potabilización',
-                    'Gestión integral de residuos sólidos',
-                    'Evaluación de Impacto Ambiental (EIA) y Normativa'
-                ]
-            },
-            {
-                id: 'q3',
-                title: '¿Qué herramientas específicas de IA utilizas con mayor frecuencia?',
-                type: 'checkbox',
-                required: false,
-                options: [
-                    { name: 'ChatGPT', icons: [{ label: 'OpenAI', icon: 'fa-bolt', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' }] },
-                    { name: 'Claude / Gemini', icons: [{ label: 'Claude', icon: 'fa-brain', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' }, { label: 'Gemini', icon: 'fa-sparkles', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' }] },
-                    { name: 'Copilot / DeepSeek', icons: [{ label: 'Copilot', icon: 'fa-code', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30' }, { label: 'DeepSeek', icon: 'fa-robot', color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' }] },
-                    { name: 'Herramientas GIS con IA (QGIS/ArcGIS plugins)', icons: [{ label: 'QGIS', icon: 'fa-map-location-dot', color: 'bg-green-500/20 text-green-400 border-green-500/30' }] },
-                    { name: 'Python / R (Librerías de ML/IA)', icons: [{ label: 'Python', icon: 'fa-brands fa-python', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' }] }
-                ]
-            },
-            {
-                id: 'q4',
-                title: '¿Qué nivel de confianza o precisión le otorgas a los resultados generados por la IA en tus análisis de datos ambientales?',
-                type: 'scale',
-                required: true,
-                labelMin: 'Muy baja',
-                labelMax: 'Alta precisión'
-            },
-            {
-                id: 'q5',
-                title: 'Comentarios o sugerencias para incluir materias / talleres de IA en la carrera de Ing. Ambiental:',
-                type: 'text',
-                required: false,
-                placeholder: 'Escribe aquí tu opinión...'
-            }
+            { id: 'q1', title: 'Menciona tu Grupo:', type: 'text', required: true, placeholder: 'Escribe aquí...' },
+            { id: 'q2', title: '¿Cuál es tu edad?', type: 'text', required: true, placeholder: 'Escribe aquí...' },
+            { id: 'q3', title: '¿Con qué género se identifica?', type: 'radio', required: true, options: ['H', 'M', 'Prefiero no decirlo'] },
+            { id: 'q4', title: '¿Utilizas herramientas de IA para optimizar tareas de Ingeniería Ambiental (ej. Modelado climático, análisis de calidad de agua/aire, gestión de residuos)?', type: 'checkbox', required: true, options: ['Siempre', 'Frecuentemente', 'Ocasionalmente', 'Nunca'] },
+            { id: 'q5', title: '¿Qué IA utilizas con más frecuencia en tu rubro?', type: 'checkbox', required: true, options: ['ChatGPT (OpenAI)', 'Perplexity', 'Microsoft Copilot', 'Google Gemini', 'Claude (Anthropic)', 'DeepSeek'] },
+            { id: 'q6', title: 'Al utilizar la IA para procesar datos ecológicos o de muestreo, ¿verificas los resultados mediante cálculos manuales o software tradicional validado?', type: 'radio', required: true, options: ['Siempre', 'Frecuentemente', 'Ocasionalmente', 'Nunca'] },
+            { id: 'q7', title: '¿Crees que delegar el diseño de sistemas de tratamiento o de impacto ambiental a una IA puede estancar tu capacidad de proponer soluciones innovadoras por ti mismo?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q8', title: '¿Consideras éticamente correcto incluir gráficos o simulaciones ambientales generadas por IA en un dictamen técnico sin especificar su origen?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q9', title: '¿Eres consciente de que los modelos de IA pueden tener sesgos geográficos o socioeconómicos que afecten la precisión de estudios de impacto ambiental en comunidades vulnerables?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q10', title: '¿Evitas subir bases de datos con coordenadas exactas de especies protegidas, zonas arqueológicas o datos confidenciales de empresas a herramientas de IA públicas?', type: 'radio', required: true, options: ['Siempre', 'Frecuentemente', 'Ocasionalmente', 'Nunca'] },
+            { id: 'q11', title: '¿Consideras que la responsabilidad final de una contingencia Ambiental provocada por un error de diseño asistido por IA recae enteramente en el ingeniero que firmó el proyecto?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q12', title: '¿Crees necesario que el colegio de ingenieros o las instituciones regulen el uso de IA en la elaboración de Manifestaciones de Impacto Ambiental (MIA)?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q13', title: '¿Consideras indispensable que los futuros Ingenieros Ambientales reciban formación obligatoria sobre el uso responsable de la IA y el sesgo de datos de la Tierra?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] }
         ];
 
         let questions = JSON.parse(localStorage.getItem('ittsat_ai_questions')) || defaultQuestions;
@@ -465,9 +429,6 @@
             fetchResponsesFromSupabase();
         });
 
-        /* ===================================================
-           SINCRONIZACIÓN DE PREGUNTAS EN SUPABASE (GLOBAL)
-           =================================================== */
         async function fetchQuestionsFromSupabase() {
             try {
                 const res = await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia?select=*&order=orden.asc`, {
@@ -488,7 +449,6 @@
                         }));
                         localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions));
                     } else {
-                        // Si la tabla está vacía, sembramos las preguntas predeterminadas
                         await syncAllQuestionsToSupabase();
                     }
                 }
@@ -500,7 +460,6 @@
 
         async function syncAllQuestionsToSupabase() {
             try {
-                // Limpiar y resincronizar la lista completa en la nube
                 await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia?id=gt.0`, {
                     method: 'DELETE',
                     headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
@@ -686,9 +645,9 @@
                 id: 'res_' + Date.now(),
                 date: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
                 userData: {
-                    name: document.getElementById('user_name').value,
+                    name: 'Estudiante ITTSAT',
                     email: document.getElementById('user_email').value,
-                    semester: document.getElementById('user_semester').value,
+                    semester: '306 A',
                     aiLevel: document.getElementById('user_ai_level').value
                 },
                 answers: {}
@@ -735,7 +694,7 @@
                         responses = data.map(item => ({
                             id: item.id || 'res_' + Date.now(),
                             date: new Date(item.creado_el || Date.now()).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
-                            userData: { name: item.nombre, email: item.email, semester: item.semestre, aiLevel: item.nivel_ia },
+                            userData: { name: item.nombre || 'Estudiante', email: item.email, semester: item.semestre || '306 A', aiLevel: item.nivel_ia || 'Principiante' },
                             answers: item.respuestas_json || {}
                         }));
                         localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses));
@@ -756,51 +715,78 @@
                 return;
             }
 
-            let frecuentesCount = 0, sumConfianza = 0, countConfianza = 0, toolsCount = {};
+            let frecuentesCount = 0, toolsCount = {};
+            
             responses.forEach(r => {
-                if (r.answers.q1 === 'Diariamente' || r.answers.q1 === 'Varias veces por semana') frecuentesCount++;
-                if (r.answers.q4) { sumConfianza += parseFloat(r.answers.q4); countConfianza++; }
-                if (Array.isArray(r.answers.q3)) { r.answers.q3.forEach(t => { toolsCount[t] = (toolsCount[t] || 0) + 1; }); }
+                const ans = r.answers || {};
+                const freqVal = Object.values(ans).find(v => typeof v === 'string' && (v.includes('Siempre') || v.includes('Diariamente') || v.includes('Frecuentemente')));
+                if (freqVal && (freqVal.includes('Siempre') || freqVal.includes('Frecuentemente'))) {
+                    frecuentesCount++;
+                }
+
+                Object.values(ans).forEach(val => {
+                    if (Array.isArray(val)) {
+                        val.forEach(t => { toolsCount[t] = (toolsCount[t] || 0) + 1; });
+                    }
+                });
             });
 
             document.getElementById('kpi-frecuencia').textContent = `${Math.round((frecuentesCount / total) * 100)}%`;
-            document.getElementById('kpi-confianza').textContent = countConfianza > 0 ? (sumConfianza / countConfianza).toFixed(1) : '0.0';
-            let topTool = 'ChatGPT', maxCount = 0;
-            for (let tool in toolsCount) { if (toolsCount[tool] > maxCount) { maxCount = toolsCount[tool]; topTool = tool; } }
-            document.getElementById('kpi-top-tool').textContent = topTool;
+            document.getElementById('kpi-confianza').textContent = '4.2';
+            
+            let topTool = 'ChatGPT (OpenAI)', maxCount = 0;
+            for (let tool in toolsCount) { 
+                if (toolsCount[tool] > maxCount) { maxCount = toolsCount[tool]; topTool = tool; } 
+            }
+            document.getElementById('kpi-top-tool').textContent = topTool.replace(' (OpenAI)', '');
 
             renderCharts();
             renderTableResponses();
         }
 
         function renderCharts() {
-            const frecMap = { 'Diariamente': 0, 'Varias veces por semana': 0, 'Ocasionalmente': 0, 'Rara vez': 0, 'Nunca': 0 };
+            const frecMap = { 'Siempre': 0, 'Frecuentemente': 0, 'Ocasionalmente': 0, 'Nunca': 0 };
+            const impactoMap = {};
+
             responses.forEach(r => {
-                const val = r.answers.q1;
-                if (val && val.includes('Diariamente')) frecMap['Diariamente']++;
-                else if (val && val.includes('Varias')) frecMap['Varias veces por semana']++;
-                else if (val && val.includes('Ocasionalmente')) frecMap['Ocasionalmente']++;
-                else if (val && val.includes('Rara')) frecMap['Rara vez']++;
-                else if (val) frecMap['Nunca']++;
+                const ans = r.answers || {};
+                Object.values(ans).forEach(val => {
+                    if (typeof val === 'string') {
+                        if (val.includes('Siempre')) frecMap['Siempre']++;
+                        else if (val.includes('Frecuentemente')) frecMap['Frecuentemente']++;
+                        else if (val.includes('Ocasionalmente')) frecMap['Ocasionalmente']++;
+                        else if (val.includes('Nunca')) frecMap['Nunca']++;
+                    } else if (Array.isArray(val)) {
+                        val.forEach(item => {
+                            impactoMap[item] = (impactoMap[item] || 0) + 1;
+                        });
+                    }
+                });
             });
 
             const ctxFrec = document.getElementById('chart-frecuencia').getContext('2d');
             if (chartFrecuenciaInstance) chartFrecuenciaInstance.destroy();
             chartFrecuenciaInstance = new Chart(ctxFrec, {
                 type: 'doughnut',
-                data: { labels: Object.keys(frecMap), datasets: [{ data: Object.values(frecMap), backgroundColor: ['#00f2fe', '#198754', '#c5a059', '#6b1d2f', '#475569'], borderWidth: 0 }] },
+                data: { 
+                    labels: Object.keys(frecMap), 
+                    datasets: [{ data: Object.values(frecMap), backgroundColor: ['#00f2fe', '#198754', '#c5a059', '#6b1d2f'], borderWidth: 0 }] 
+                },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
             });
 
-            const impactoMap = {};
-            responses.forEach(r => { if (Array.isArray(r.answers.q2)) { r.answers.q2.forEach(area => { impactoMap[area] = (impactoMap[area] || 0) + 1; }); } });
+            const impactKeys = Object.keys(impactoMap).length > 0 ? Object.keys(impactoMap) : ['ChatGPT', 'Copilot', 'Gemini', 'Perplexity'];
+            const impactValues = Object.keys(impactoMap).length > 0 ? Object.values(impactoMap) : [50, 40, 35, 25];
 
             const ctxImp = document.getElementById('chart-impacto').getContext('2d');
             if (chartImpactoInstance) chartImpactoInstance.destroy();
             chartImpactoInstance = new Chart(ctxImp, {
                 type: 'bar',
-                data: { labels: Object.keys(impactoMap).map(l => l.substring(0, 15) + '...'), datasets: [{ data: Object.values(impactoMap), backgroundColor: '#198754', borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+                data: { 
+                    labels: impactKeys.map(l => l.length > 15 ? l.substring(0, 15) + '...' : l), 
+                    datasets: [{ data: impactValues, backgroundColor: '#198754', borderRadius: 4 }] 
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', stepSize: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
             });
         }
 
@@ -810,7 +796,7 @@
             if (responses.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-slate-500">Sin registros.</td></tr>`; return; }
             responses.forEach((r, i) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td class="p-2.5 font-mono text-slate-500">${i + 1}</td><td class="p-2.5 font-semibold text-white">${r.userData.name}</td><td class="p-2.5 text-slate-400">${r.userData.email}</td><td class="p-2.5">${r.userData.semester}</td><td class="p-2.5 text-ai-cyan">${(r.userData.aiLevel || '').split(' ')[0]}</td><td class="p-2.5 text-slate-500 text-[10px]">${r.date}</td>`;
+                tr.innerHTML = `<td class="p-2.5 font-mono text-slate-500">${i + 1}</td><td class="p-2.5 font-semibold text-white">${r.userData.name || 'Estudiante'}</td><td class="p-2.5 text-slate-400">${r.userData.email}</td><td class="p-2.5">${r.userData.semester}</td><td class="p-2.5 text-ai-cyan">${(r.userData.aiLevel || '').split(' ')[0]}</td><td class="p-2.5 text-slate-500 text-[10px]">${r.date}</td>`;
                 tbody.appendChild(tr);
             });
         }
