@@ -641,30 +641,36 @@
 
         async function handleFormSubmit(event) {
             event.preventDefault();
-            const newResponse = {
-                id: 'res_' + Date.now(),
-                date: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
-                userData: {
-                    name: 'Estudiante ITTSAT',
-                    email: document.getElementById('user_email').value,
-                    semester: '306 A',
-                    aiLevel: document.getElementById('user_ai_level').value
-                },
-                answers: {}
-            };
+            const answers = {};
 
             questions.forEach(q => {
                 if (q.type === 'radio' || q.type === 'scale') {
                     const checked = document.querySelector(`input[name="${q.id}"]:checked`);
-                    newResponse.answers[q.id] = checked ? checked.value : '';
+                    answers[q.id] = checked ? checked.value : '';
                 } else if (q.type === 'checkbox') {
                     const checkboxes = document.querySelectorAll(`input[name="${q.id}"]:checked`);
-                    newResponse.answers[q.id] = Array.from(checkboxes).map(c => c.value);
+                    answers[q.id] = Array.from(checkboxes).map(c => c.value);
                 } else if (q.type === 'text') {
                     const txt = document.querySelector(`textarea[name="${q.id}"]`);
-                    newResponse.answers[q.id] = txt ? txt.value : '';
+                    answers[q.id] = txt ? txt.value : '';
                 }
             });
+
+            const emailVal = document.getElementById('user_email').value;
+            const groupVal = answers['q1'] || '306 A';
+            const nameFromEmail = emailVal ? emailVal.split('@')[0] : 'Alumno';
+
+            const newResponse = {
+                id: 'res_' + Date.now(),
+                date: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
+                userData: {
+                    name: nameFromEmail,
+                    email: emailVal,
+                    semester: groupVal,
+                    aiLevel: document.getElementById('user_ai_level').value
+                },
+                answers: answers
+            };
 
             responses.push(newResponse);
             localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses));
@@ -802,17 +808,34 @@
         }
 
         function exportToExcel() {
-            if (responses.length === 0) return showToast('Aviso', 'No hay datos.', 'error');
+            if (responses.length === 0) return showToast('Aviso', 'No hay datos para exportar.', 'error');
+            
             const excelData = responses.map((r, i) => {
-                const row = { 'No.': i + 1, 'Nombre': r.userData.name, 'Correo': r.userData.email, 'Semestre': r.userData.semester, 'Nivel IA': r.userData.aiLevel, 'Fecha': r.date };
-                questions.forEach((q, qIndex) => { row[`P${qIndex + 1}: ${q.title}`] = Array.isArray(r.answers[q.id]) ? r.answers[q.id].join(', ') : (r.answers[q.id] || 'N/A'); });
+                const row = { 
+                    'No.': i + 1, 
+                    'Nombre': r.userData.name || 'Estudiante', 
+                    'Correo': r.userData.email, 
+                    'Semestre/Grupo': r.userData.semester, 
+                    'Nivel IA': r.userData.aiLevel, 
+                    'Fecha': r.date 
+                };
+
+                const answers = r.answers || {};
+                
+                questions.forEach((q, qIndex) => {
+                    const qKey = `q${qIndex + 1}`;
+                    const answerValue = answers[q.id] !== undefined ? answers[q.id] : (answers[qKey] !== undefined ? answers[qKey] : 'N/A');
+                    row[`P${qIndex + 1}: ${q.title}`] = Array.isArray(answerValue) ? answerValue.join(', ') : answerValue;
+                });
+
                 return row;
             });
+
             const worksheet = XLSX.utils.json_to_sheet(excelData);
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "Registros IA");
             XLSX.writeFile(workbook, `Concentrado_IA_${Date.now()}.xlsx`);
-            showToast('Exportado', 'Archivo Excel descargado.', 'success');
+            showToast('Exportado', 'Archivo Excel descargado con éxito.', 'success');
         }
 
         function clearResponses() {
