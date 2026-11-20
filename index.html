@@ -1,641 +1,442 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-full bg-slate-900 text-slate-100">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samaritan's Purse - Concentrado General de Niños</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="img/logo.jpg">
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Librerías para exportar a Excel y PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IA en Ing. Ambiental - ITTSAT</title>
+    <!-- LOGO DE PESTAÑA (FAVICON) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f5132'/><path d='M50 20 C30 35, 30 65, 50 80 C70 65, 70 35, 50 20 Z' fill='%23c5a059'/><circle cx='50' cy='50' r='10' fill='%2300f2fe'/></svg>">
     
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS (xlsx) para Exportar Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- FontAwesome Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ittsat: {
+                            green: '#198754',
+                            darkgreen: '#0f5132',
+                            wine: '#6b1d2f',
+                            gold: '#c5a059',
+                            goldlight: '#e6c875'
+                        },
+                        ai: {
+                            cyan: '#00f2fe',
+                            blue: '#4facfe',
+                            purple: '#7928ca',
+                            neon: '#00e5ff'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            background: linear-gradient(135deg, #7a0010 0%, #b3001b 50%, #52000a 100%);
-            background-attachment: fixed;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
-        .card-custom {
-            background-color: rgba(255, 255, 255, 0.95);
-            color: #212529;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border: 2px solid #198754;
+        @keyframes floatBot {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
         }
-
-        .navbar-custom {
-            background-color: #400005 !important;
-            border-bottom: 3px solid #198754;
-        }
-
-        .btn-animated {
-            transition: all 0.2s ease-in-out;
-            transform: scale(1);
-        }
-        .btn-animated:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        .btn-animated:active {
-            transform: scale(0.97);
-        }
-
-        .text-title-green {
-            color: #198754;
-            font-weight: 700;
-        }
-
-        .carousel-item img {
-            height: 220px;
-            object-fit: cover;
-            border-radius: 0.75rem;
-        }
-
-        .logo-inicio {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-        }
-        .logo-admin {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        .dynamic-input-group {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 8px;
-        }
-
-        .input-perimetro {
-            border: 1.5px solid #ced4da;
-            border-radius: 0.5rem;
-            padding: 0.4rem 0.75rem;
-            background-color: #ffffff;
-            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        .input-perimetro:focus {
-            border-color: #198754;
-            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
-            outline: none;
-        }
-
-        .badge-index {
-            min-width: 28px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.85rem;
-        }
-
-        /* Estilos personalizados para botones Notificar y Trasladar */
-        .btn-whatsapp-custom {
-            background-color: #25D366;
-            color: #ffffff;
-            border: none;
-        }
-        .btn-whatsapp-custom:hover {
-            background-color: #1ebe57;
-            color: #ffffff;
-        }
-
-        .btn-trasladar-custom {
-            background-color: #6f42c1;
-            color: #ffffff;
-            border: none;
-        }
-        .btn-trasladar-custom:hover {
-            background-color: #5a32a3;
-            color: #ffffff;
-        }
-
-        .bg-purple-header {
-            background-color: #6f42c1 !important;
-            color: #ffffff !important;
-        }
+        .animate-bot { animation: floatBot 4s ease-in-out infinite; }
     </style>
 </head>
-<script>
-    const SUPABASE_URL = 'https://otfskfmenzjtceuwcicv.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im90ZnNrZm1lbnpqdGNldXdjaWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4MTEyNzgsImV4cCI6MjEwNTM4NzI3OH0.zgUYxWhKMu_KfXazJ-XrkpfwImClLBmsIW3lAMlbiIE';
-    const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-</script>
-<body>
+<body class="font-sans antialiased min-h-full flex flex-col bg-slate-950 text-slate-100 selection:bg-ai-cyan selection:text-slate-900">
 
-    <!-- NAVEGACIÓN / HEADER -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-                <img src="img/logo.jpg" alt="Logo" class="rounded-circle bg-white p-1 shadow logo-inicio" onerror="this.style.display='none'">
-                <span class="fw-bold text-white fs-4">🎁 Samaritan's Purse</span>
-            </a>
-            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+    <!-- PANTALLA DE BIENVENIDA (SPLASH) -->
+    <div id="intro-splash" class="fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-4 text-center transition-all duration-700">
+        <div class="relative max-w-sm w-full glass-card p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl flex flex-col items-center space-y-5 overflow-hidden">
+            <div class="absolute -top-20 -left-20 w-40 h-40 bg-ittsat-green/30 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-ai-purple/30 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative animate-bot">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-ittsat-green via-ai-purple to-ai-cyan p-1 shadow-xl shadow-ai-cyan/20">
+                    <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center relative overflow-hidden">
+                        <i class="fa-solid fa-robot text-3xl text-ai-cyan"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-ittsat-green/20 border border-ittsat-green/40 text-emerald-400 text-[11px] font-semibold">
+                    <i class="fa-solid fa-leaf"></i> ITTSAT — Ing. Ambiental
+                </div>
+                <h1 class="text-xl font-extrabold text-white tracking-tight leading-snug">
+                    Uso de la <span class="text-transparent bg-clip-text bg-gradient-to-r from-ai-cyan via-emerald-400 to-ittsat-gold">Inteligencia Artificial</span>
+                </h1>
+                <p class="text-xs text-slate-300 leading-relaxed px-2">
+                     Hola, te invito a responder el cuestionario. El objetivo es conocer acerca del uso ético de la IA durante la formación académica.
+                </p>
+            </div>
+
+            <button onclick="startApp()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-ittsat-green via-emerald-600 to-ai-cyan hover:opacity-90 text-slate-950 font-bold text-sm shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                <span>Comenzar Encuesta</span>
+                <i class="fa-solid fa-arrow-right"></i>
             </button>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <div class="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0 w-100 w-lg-auto">
-                    <button onclick="cambiarVista('form')" id="btn-form" class="btn btn-success btn-animated fw-bold w-100 w-lg-auto">
-                        <i class="bi bi-journal-plus me-1"></i> Registrar Iglesia
+        </div>
+    </div>
+
+    <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
+    <header class="sticky top-0 z-40 glass-card border-b border-slate-800/80 shadow-lg">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14 sm:h-16 gap-2">
+                <div class="flex items-center gap-2 overflow-hidden">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-ittsat-green via-ittsat-wine to-ai-purple flex items-center justify-center shadow-md p-0.5 shrink-0">
+                        <div class="w-full h-full bg-slate-900 rounded-[8px] flex items-center justify-center">
+                            <i class="fa-solid fa-leaf text-ittsat-gold text-sm sm:text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="truncate">
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-sm sm:text-base tracking-wide text-white">ITTSAT</span>
+                            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-ai-cyan/20 text-ai-cyan border border-ai-cyan/30 font-semibold">IA</span>
+                        </div>
+                    </div>
+                </div>
+
+                <nav class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 shrink-0">
+                    <button id="tab-form" onclick="switchView('form')" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 bg-gradient-to-r from-ittsat-green to-emerald-600 text-white shadow-md">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <span class="hidden xs:inline">Responder</span>
                     </button>
-                    <button onclick="cambiarVista('admin')" id="btn-admin" class="btn btn-outline-light btn-animated fw-bold w-100 w-lg-auto">
-                        <i class="bi bi-gear-fill me-1"></i> Panel Administrador
+                    <button id="tab-admin" onclick="switchView('admin')" class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-lock text-[10px] text-ittsat-gold"></i>
+                        <span class="hidden xs:inline">Admin</span>
                     </button>
+                </nav>
+
+                <div class="hidden md:flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-800/50 px-2.5 py-1 rounded-xl">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-medium">DB Conectada</span>
                 </div>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="container py-4">
-
-        <!-- CARRUSEL -->
-        <div id="carouselExampleIndicators" class="carousel slide mb-4 shadow-lg rounded-4 overflow-hidden" data-bs-ride="carousel">
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="img/banner1.jpg" class="d-block w-100" alt="Banner 1" onerror="this.src='https://images.unsplash.com/photo-1532375810709-75b1da00537c?q=80&w=1200&auto=format&fit=crop'">
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-1">
-                        <h5>Operación Niño de la Navidad</h5>
-                        <p>Llevando esperanza y amor a cada rincón.</p>
+    <!-- BANNER CARRUSEL SUPERIOR -->
+    <section class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 pt-3 pb-1">
+        <div id="carousel" class="relative h-40 sm:h-56 md:h-64 w-full overflow-hidden rounded-xl sm:rounded-2xl border border-slate-800 shadow-xl group">
+            <div id="carousel-slides" class="h-full flex transition-transform duration-700 ease-out">
+                <div class="min-w-full h-full relative">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80" alt="IA y Sensores" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
+                        <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-ai-cyan mb-0.5"><i class="fa-solid fa-microchip mr-1"></i> Tecnología Verde</span>
+                        <h2 class="text-sm sm:text-xl font-bold text-white">IA aplicada a la Ingeniería Ambiental</h2>
                     </div>
                 </div>
-                <div class="carousel-item">
-                    <img src="img/banner2.jpg" class="d-block w-100" alt="Banner 2" onerror="this.src='https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200&auto=format&fit=crop'">
-                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-1">
-                        <h5>Concentrados Automatizados</h5>
-                        <p>Control rápido, autónomo y sin errores por zonas.</p>
+                <div class="min-w-full h-full relative">
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80" alt="Modelado Climático" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
+                        <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-0.5"><i class="fa-solid fa-tree mr-1"></i> Sustentabilidad</span>
+                        <h2 class="text-sm sm:text-xl font-bold text-white">Predicción de Impacto y Recursos</h2>
+                    </div>
+                </div>
+                <div class="min-w-full h-full relative">
+                    <img src="https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=1200&q=80" alt="Estudiantes ITTSAT" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6">
+                        <span class="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-ittsat-gold mb-0.5"><i class="fa-solid fa-graduation-cap mr-1"></i> ITTSAT</span>
+                        <h2 class="text-sm sm:text-xl font-bold text-white">Encuesta Estudiantil de Innovación</h2>
                     </div>
                 </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+            <div id="carousel-dots" class="absolute bottom-2 right-4 flex gap-1.5 z-10">
+                <button onclick="goToSlide(0)" class="w-2 h-2 rounded-full bg-white transition-all"></button>
+                <button onclick="goToSlide(1)" class="w-2 h-2 rounded-full bg-white/40 transition-all"></button>
+                <button onclick="goToSlide(2)" class="w-2 h-2 rounded-full bg-white/40 transition-all"></button>
+            </div>
         </div>
+    </section>
 
-        <!-- ================= VISTA 1: FORMULARIO ================= -->
-        <section id="vista-form" class="card-custom p-4 p-md-5">
-            <h2 class="text-title-green mb-2"><i class="bi bi-clipboard2-plus-fill me-2"></i>Concentrado General de Niños por Iglesia</h2>
-            <p class="text-muted mb-4">Complete la información general y registre cada niño en su casillero correspondiente.</p>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4">
 
-            <form id="form-iglesia" onsubmit="guardarRegistro(event)" class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold"><i class="bi bi-geo-alt-fill text-success me-1"></i> Zona de Procedencia:</label>
-                    <select id="zona_id" required class="form-select bg-light">
-                        <option value="">Seleccione una zona...</option>
-                        <option value="1">San Andrés</option>
-                        <option value="2">Tezonapa</option>
-                        <option value="3">Orizaba</option>
-                        <option value="4">Xalapa</option>
-                        <option value="5">Manlio</option>
-                        <option value="6">Medellín</option>
-                        <option value="7">Carlos A. Carrillo</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold"><i class="bi bi-house-heart-fill text-success me-1"></i> Nombre de la Iglesia:</label>
-                    <input type="text" id="nombre_iglesia" required maxlength="100" class="form-control bg-light" placeholder="Ej. Manantial de Vida">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold"><i class="bi bi-person-badge-fill text-success me-1"></i> Nombre del Pastor:</label>
-                    <input type="text" id="nombre_pastor" required maxlength="100" class="form-control bg-light" placeholder="Ej. Silvia Rosas Quino">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold"><i class="bi bi-map-fill text-success me-1"></i> Domicilio:</label>
-                    <input type="text" id="domicilio" required maxlength="150" class="form-control bg-light" placeholder="Ej. C. Belisario Domínguez">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold"><i class="bi bi-telephone-fill text-success me-1"></i> No. Telefónico o Celular:</label>
-                    <input type="text" id="telefono" required maxlength="25" class="form-control bg-light" placeholder="Ej. 294 107 1402">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold"><i class="bi bi-pin-map-fill text-success me-1"></i> Municipio, Estado:</label>
-                    <input type="text" id="municipio_estado" required maxlength="100" class="form-control bg-light" placeholder="Ej. San Andrés Tuxtla, Veracruz">
-                </div>
-                <div class="col-12">
-                    <label class="form-label fw-bold"><i class="bi bi-calendar-event-fill text-success me-1"></i> Fecha de Entrega de la Lista:</label>
-                    <input type="date" id="fecha_entrega" required class="form-control bg-light">
-                </div>
+        <!-- VISTA 1: FORMULARIO -->
+        <section id="view-form" class="space-y-4 max-w-3xl mx-auto">
+            <div class="glass-card rounded-2xl p-4 sm:p-6 border-l-4 border-l-ittsat-green relative overflow-hidden shadow-lg">
+                <h1 class="text-lg sm:text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-ai-cyan"></i>
+                    Uso de la IA en Ing. Ambiental
+                </h1>
+                <p class="text-slate-300 text-xs sm:text-sm mt-2 leading-relaxed">
+                     Hola, te invito a responder el cuestionario. El objetivo es conocer acerca del uso ético de la IA durante la formación académica.
+                </p>
+            </div>
 
-                <hr class="my-4">
+            <form id="poll-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div class="glass-card rounded-2xl p-4 sm:p-6 space-y-4 border border-slate-800">
+                    <h2 class="text-sm sm:text-base font-semibold text-white border-b border-slate-800 pb-2 flex items-center justify-between">
+                        <span><i class="fa-solid fa-user-graduate text-ittsat-gold mr-2"></i>Datos del Participante</span>
+                        <span class="text-[11px] text-slate-400 font-normal">Requerido *</span>
+                    </h2>
 
-                <h3 class="text-title-green h4 mb-2"><i class="bi bi-people-fill me-2"></i>Listado Nominal por Edades</h3>
-                <p class="text-muted small mb-3">Escriba el nombre en un cuadro. Al escribir, automáticamente aparecerá el siguiente casillero:</p>
-
-                <!-- CASILLEROS DINÁMICOS PARA FORMULARIO -->
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light shadow-sm">
-                        <label class="form-label fw-bold text-success mb-2"><i class="bi bi-gender-female me-1"></i> 👧 Niñas (2 - 4 años)</label>
-                        <div id="container_ninas_2_4"></div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light shadow-sm">
-                        <label class="form-label fw-bold text-primary mb-2"><i class="bi bi-gender-male me-1"></i> 👦 Niños (2 - 4 años)</label>
-                        <div id="container_ninos_2_4"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Nombre Completo *</label>
+                            <input type="text" id="user_name" required placeholder="Ej. Juan Pérez" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Teléfono / WhatsApp *</label>
+                            <input type="tel" id="user_phone" required placeholder="Ej. 9212743938" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Correo Electrónico *</label>
+                            <input type="email" id="user_email" required placeholder="correo@ittsat.edu.mx" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Nivel de Conocimiento en IA *</label>
+                            <select id="user_ai_level" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-ai-cyan">
+                                <option value="" disabled selected>Selecciona tu nivel</option>
+                                <option value="Principiante (Básico)">Principiante (Básico)</option>
+                                <option value="Intermedio (Usuario)">Intermedio (Usuario)</option>
+                                <option value="Avanzado (Aplicado)">Avanzado (Aplicado)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light shadow-sm">
-                        <label class="form-label fw-bold text-success mb-2"><i class="bi bi-gender-female me-1"></i> 👧 Niñas (5 - 9 años)</label>
-                        <div id="container_ninas_5_9"></div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light shadow-sm">
-                        <label class="form-label fw-bold text-primary mb-2"><i class="bi bi-gender-male me-1"></i> 👦 Niños (5 - 9 años)</label>
-                        <div id="container_ninos_5_9"></div>
-                    </div>
-                </div>
+                <div id="dynamic-questions-container" class="space-y-4"></div>
 
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light shadow-sm">
-                        <label class="form-label fw-bold text-success mb-2"><i class="bi bi-gender-female me-1"></i> 👧 Niñas (10 - 14 años)</label>
-                        <div id="container_ninas_10_14"></div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="p-3 border rounded bg-light shadow-sm">
-                        <label class="form-label fw-bold text-primary mb-2"><i class="bi bi-gender-male me-1"></i> 👦 Niños (10 - 14 años)</label>
-                        <div id="container_ninos_10_14"></div>
-                    </div>
-                </div>
-
-                <div class="col-12 text-center mt-4">
-                    <button type="submit" id="btn-guardar" class="btn btn-success btn-lg btn-animated px-5 fw-bold shadow w-100 w-md-auto">
-                        <i class="bi bi-check-circle-fill me-2"></i> Guardar Concentrado General
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-ittsat-green via-emerald-600 to-ai-cyan hover:opacity-90 text-slate-950 font-bold text-sm shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Enviar Respuestas</span>
                     </button>
                 </div>
             </form>
         </section>
 
-        <!-- ================= VISTA 2: PANEL DE ADMINISTRADOR ================= -->
-        <section id="vista-admin" class="d-none">
-            <!-- Login por Zona -->
-            <div id="admin-login" class="card-custom p-4 p-md-5 mx-auto text-center" style="max-width: 500px;">
-                <div class="mb-4">
-                    <img src="img/logo.jpg" alt="Logo Admin" class="rounded-circle shadow-lg p-1 bg-white border border-success logo-admin" onerror="this.style.display='none'">
+        <!-- VISTA 2: DASHBOARD Y EDICIÓN -->
+        <section id="view-admin" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-ittsat-gold"></i>
+                        Panel de Control
+                    </h2>
+                    <p class="text-slate-400 text-xs">Analiza resultados, traslada registros entre zonas o notifica por WhatsApp.</p>
                 </div>
-                <h2 class="text-title-green h3 mb-3">Acceso Administrativo por Zona</h2>
-                <p class="text-muted mb-4">Seleccione su zona e introduzca su contraseña de administrador.</p>
-                
-                <div class="text-start mb-3">
-                    <label class="form-label fw-bold">Zona:</label>
-                    <select id="login-zona" class="form-select bg-light">
-                        <option value="1">San Andrés</option>
-                        <option value="2">Tezonapa</option>
-                        <option value="3">Orizaba</option>
-                        <option value="4">Xalapa</option>
-                        <option value="5">Manlio</option>
-                        <option value="6">Medellín</option>
-                        <option value="7">Carlos A. Carrillo</option>
-                    </select>
-                </div>
-                <div class="text-start mb-4">
-                    <label class="form-label fw-bold">Contraseña de Administrador:</label>
-                    <input type="password" id="login-pass" class="form-control bg-light" placeholder="Contraseña de zona">
-                </div>
-                <button onclick="verificarLogin()" class="btn btn-success w-100 btn-animated py-2 fw-bold shadow">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Panel
-                </button>
-            </div>
 
-            <!-- Dashboard de Zona -->
-            <div id="admin-dashboard" class="d-none">
-                <div class="card-custom p-4 mb-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-                    <div class="d-flex align-items-center gap-3">
-                        <img src="img/logo.jpg" alt="Logo Zona" class="rounded-circle shadow bg-white p-1 d-none d-sm-block logo-inicio" onerror="this.style.display='none'">
-                        <div>
-                            <h2 class="text-title-green h3 mb-1" id="titulo-zona-admin"><i class="bi bi-speedometer2 me-2"></i>Panel de Administración</h2>
-                            <p class="text-muted mb-0 small" id="subtitulo-zona">Zona activa</p>
-                        </div>
-                    </div>
-                    <button onclick="cerrarSesion()" class="btn btn-secondary btn-animated fw-bold btn-sm">
-                        <i class="bi bi-box-arrow-left me-1"></i> Salir
+                <div class="flex gap-1 bg-slate-900 p-1 rounded-xl border border-slate-800 self-start sm:self-auto">
+                    <button onclick="switchAdminTab('dash')" id="subtab-dash" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-ai-cyan shadow">
+                        <i class="fa-solid fa-chart-pie mr-1"></i> Dashboard
+                    </button>
+                    <button onclick="switchAdminTab('builder')" id="subtab-builder" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
+                        <i class="fa-solid fa-pen-to-square mr-1"></i> Preguntas
                     </button>
                 </div>
+            </div>
 
-                <!-- Tarjetas resumen superiores -->
-                <div class="row g-3 mb-4" id="tarjetas-totales"></div>
-
-                <!-- ZONA DE ARCHIVOS -->
-                <div class="card-custom p-4 mb-4">
-                    <h3 class="text-title-green h5 mb-3"><i class="bi bi-folder-symlink-fill me-2"></i>Zona de Archivos</h3>
-                    <div class="row g-3">
-                        <!-- 1. General Concentrado -->
-                        <div class="col-md-4">
-                            <div class="border rounded p-3 bg-light text-center h-100 d-flex flex-column justify-content-between shadow-sm">
-                                <div>
-                                    <h5 class="fw-bold text-dark h6 mb-2">General Concentrado</h5>
-                                    <p class="text-muted text-xs mb-3" style="font-size: 0.85rem;">Total de concentrados numéricos por iglesia (2 registros por página).</p>
-                                </div>
-                                <button onclick="descargarGeneralConcentradoPDF()" class="btn btn-danger btn-animated fw-bold btn-sm w-100">
-                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF Concentrados
-                                </button>
-                            </div>
+            <div id="admin-dash-content" class="space-y-4">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="glass-card p-3.5 rounded-2xl border border-slate-800 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-ittsat-green/20 text-ittsat-green flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-users"></i>
                         </div>
-
-                        <!-- 2. General Listado -->
-                        <div class="col-md-4">
-                            <div class="border rounded p-3 bg-light text-center h-100 d-flex flex-column justify-content-between shadow-sm">
-                                <div>
-                                    <h5 class="fw-bold text-dark h6 mb-2">General Listado</h5>
-                                    <p class="text-muted text-xs mb-3" style="font-size: 0.85rem;">Listas completas de nombres de personas/niños por cada iglesia.</p>
-                                </div>
-                                <button onclick="descargarGeneralListadoPDF()" class="btn btn-danger btn-animated fw-bold btn-sm w-100">
-                                    <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF Listados Nominales
-                                </button>
-                            </div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-medium">Total</p>
+                            <h3 id="kpi-total" class="text-lg font-bold text-white">0</h3>
                         </div>
+                    </div>
 
-                        <!-- 3. Mezcla de Todos -->
-                        <div class="col-md-4">
-                            <div class="border rounded p-3 bg-light text-center h-100 d-flex flex-column justify-content-between shadow-sm">
-                                <div>
-                                    <h5 class="fw-bold text-dark h6 mb-2">Mezcla de Todos</h5>
-                                    <p class="text-muted text-xs mb-3" style="font-size: 0.85rem;">Documento completo unificado (Concentrado + Listado Nominal por iglesia).</p>
-                                </div>
-                                <div class="d-flex gap-1">
-                                    <button onclick="descargarPDFMasterZona()" class="btn btn-danger btn-animated fw-bold btn-sm flex-fill">
-                                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF Master
-                                    </button>
-                                    <button onclick="descargarExcelMasterZona()" class="btn btn-success btn-animated fw-bold btn-sm flex-fill">
-                                        <i class="bi bi-file-earmark-excel-fill me-1"></i> Excel
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="glass-card p-3.5 rounded-2xl border border-slate-800 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-ai-cyan/20 text-ai-cyan flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-medium">Frecuencia</p>
+                            <h3 id="kpi-frecuencia" class="text-lg font-bold text-white">0%</h3>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-3.5 rounded-2xl border border-slate-800 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-ittsat-wine/30 text-rose-400 flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-medium">Confianza</p>
+                            <h3 id="kpi-confianza" class="text-lg font-bold text-white">0.0</h3>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-3.5 rounded-2xl border border-slate-800 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-ittsat-gold/20 text-ittsat-gold flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <div class="truncate">
+                            <p class="text-[10px] text-slate-400 font-medium">Top Tool</p>
+                            <h3 id="kpi-top-tool" class="text-xs font-bold text-white truncate">N/A</h3>
                         </div>
                     </div>
                 </div>
 
-                <!-- Buscador de Iglesias y Filtros Avanzados -->
-                <div class="card-custom p-3 mb-4">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-success text-white"><i class="bi bi-search"></i></span>
-                        <input type="text" id="buscador-iglesias" oninput="filtrarIglesias()" class="form-control" placeholder="Buscar iglesia por nombre, pastor o municipio...">
-                    </div>
-                    <!-- ZONA DE FILTROS DE INFORMACIÓN -->
-                    <div class="row g-2 align-items-center">
-                        <div class="col-md-5">
-                            <label class="form-label small fw-bold text-muted mb-0">Filtrar por rango de fecha de entrega:</label>
-                            <div class="input-group input-group-sm">
-                                <input type="date" id="filtro-fecha-inicio" onchange="filtrarIglesias()" class="form-control">
-                                <span class="input-group-text">a</span>
-                                <input type="date" id="filtro-fecha-fin" onchange="filtrarIglesias()" class="form-control">
-                            </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-col">
+                        <h3 class="text-xs sm:text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-ai-cyan"></i> Frecuencia de Uso
+                        </h3>
+                        <div class="h-56 relative flex items-center justify-center">
+                            <canvas id="chart-frecuencia"></canvas>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label small fw-bold text-muted mb-0">Ordenar por:</label>
-                            <select id="filtro-orden" onchange="filtrarIglesias()" class="form-select form-select-sm">
-                                <option value="nombre-asc">Nombre de Iglesia (A-Z)</option>
-                                <option value="fecha-reciente">Fecha de Entrega (Más reciente)</option>
-                                <option value="infantes-mayor">Mayor cantidad de infantes</option>
+                    </div>
+
+                    <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-col">
+                        <h3 class="text-xs sm:text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-column text-ittsat-green"></i> Herramientas / Criterios
+                        </h3>
+                        <div class="h-56 relative flex items-center justify-center">
+                            <canvas id="chart-impacto"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA DE REGISTROS CON FILTRO DE ZONA Y ACCIONES (NOTIFICAR Y TRASLADAR) -->
+                <div class="glass-card rounded-2xl border border-slate-800 p-4 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-table text-ittsat-gold"></i> Histórico de Registros
+                            </h3>
+                            <select id="filter-zona" onchange="renderTableResponses()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-slate-200 focus:outline-none focus:border-ai-cyan">
+                                <option value="ALL">Todas las Zonas</option>
+                                <option value="San Andrés Tuxtla">San Andrés Tuxtla</option>
+                                <option value="Santiago Tuxtla">Santiago Tuxtla</option>
+                                <option value="Catemaco">Catemaco</option>
+                                <option value="Acayucan">Acayucan</option>
+                                <option value="Sayula de Alemán">Sayula de Alemán</option>
+                                <option value="Coatzacoalcos">Coatzacoalcos</option>
+                                <option value="Minatitlán">Minatitlán</option>
                             </select>
                         </div>
-                        <div class="col-md-3 text-end d-flex align-items-end justify-content-end pt-3">
-                            <button onclick="limpiarFiltros()" class="btn btn-outline-secondary btn-sm w-100">
-                                <i class="bi bi-arrow-counterclockwise me-1"></i> Limpiar Filtros
+                        <div class="flex gap-2">
+                            <button onclick="exportToExcel()" class="px-3 py-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1 transition">
+                                <i class="fa-solid fa-file-excel"></i> Excel (.xlsx)
+                            </button>
+                            <button onclick="clearResponses()" class="px-3 py-1.5 rounded-lg bg-rose-600/20 text-rose-400 hover:bg-rose-600/30 border border-rose-500/30 text-xs font-semibold flex items-center gap-1 transition">
+                                <i class="fa-solid fa-trash-can"></i> Limpiar
                             </button>
                         </div>
                     </div>
-                </div>
 
-                <!-- Cuadrícula / Registros de Iglesias -->
-                <div class="card-custom p-4">
-                    <h3 class="text-title-green h5 mb-3"><i class="bi bi-shop me-2"></i>Iglesias Registradas en la Zona</h3>
-                    <div id="lista-iglesias-catalogo" class="row g-3"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ================= VISTA 3: DETALLE DE IGLESIA ================= -->
-        <section id="vista-detalle" class="card-custom p-4 p-md-5 d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <button onclick="volverAlAdmin()" class="btn btn-secondary btn-animated fw-bold">
-                    <i class="bi bi-arrow-left me-1"></i> Volver al Panel
-                </button>
-                <div class="d-flex gap-2 flex-wrap">
-                    <button onclick="descargarExcelIglesia()" class="btn btn-success btn-animated fw-bold btn-sm">
-                        <i class="bi bi-file-earmark-excel-fill me-1"></i> Excel Iglesia
-                    </button>
-                    <button onclick="descargarPDFIglesia()" class="btn btn-danger btn-animated fw-bold btn-sm">
-                        <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF Iglesia (Formato Oficial)
-                    </button>
-                </div>
-            </div>
-
-            <div class="card border-success shadow-sm mb-4">
-                <div class="card-header bg-success text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h5 class="mb-0 fw-bold"><i class="bi bi-tools me-2"></i>Zona Exclusiva de Administración de Iglesia</h5>
-                    <div class="d-flex gap-2 flex-wrap">
-                        <!-- NUEVO BOTÓN: NOTIFICAR POR WHATSAPP -->
-                        <button onclick="abrirModalNotificarWhatsApp()" class="btn btn-whatsapp-custom btn-sm fw-bold rounded-pill px-3 btn-animated shadow-sm">
-                            <i class="bi bi-whatsapp me-1"></i> Notificar
-                        </button>
-                        <!-- NUEVO BOTÓN: TRASLADAR DE ZONA -->
-                        <button onclick="abrirModalTrasladarZona()" class="btn btn-trasladar-custom btn-sm fw-bold rounded-pill px-3 btn-animated shadow-sm">
-                            <i class="bi bi-arrow-left-right me-1"></i> Trasladar
-                        </button>
-                        <button onclick="abrirModalEdicionIglesia()" class="btn btn-warning btn-sm fw-bold text-dark btn-animated">
-                            <i class="bi bi-pencil-square me-1"></i> Editar
-                        </button>
-                        <button onclick="eliminarIglesia()" class="btn btn-dark btn-sm fw-bold text-danger btn-animated border border-danger">
-                            <i class="bi bi-trash3-fill me-1"></i> Eliminar
-                        </button>
+                    <div class="overflow-x-auto rounded-xl border border-slate-800">
+                        <table class="w-full text-left text-xs text-slate-300 whitespace-nowrap">
+                            <thead class="bg-slate-900 text-slate-400 uppercase text-[9px] tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="p-2.5">#</th>
+                                    <th class="p-2.5">Registro / Pastor</th>
+                                    <th class="p-2.5">Contacto</th>
+                                    <th class="p-2.5">Zona / Grupo</th>
+                                    <th class="p-2.5">Nivel IA</th>
+                                    <th class="p-2.5">Fecha</th>
+                                    <th class="p-2.5 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-responses-body" class="divide-y divide-slate-800/60 bg-slate-950/40"></tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="card-body bg-light" id="detalle-contenido-iglesia"></div>
+            </div>
+
+            <div id="admin-builder-content" class="hidden space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                    <span class="text-xs text-slate-300">Modifica o crea reactivos personalizados.</span>
+                    <button onclick="addNewQuestion()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-ai-purple to-ai-blue text-white font-semibold text-xs flex items-center justify-center gap-2 shadow">
+                        <i class="fa-solid fa-plus"></i> Nueva Pregunta
+                    </button>
+                </div>
+                <div id="admin-questions-list" class="space-y-3"></div>
             </div>
         </section>
 
     </main>
 
-    <!-- ================= MODAL 1: EDICIÓN DE IGLESIA ================= -->
-    <div class="modal fade" id="modalEditarIglesia" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content card-custom p-3">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title text-title-green fw-bold"><i class="bi bi-pencil-square me-2"></i>Editar Datos de la Iglesia y Niños</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="form-editar-iglesia" onsubmit="guardarEdicionIglesia(event)" class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Nombre de la Iglesia:</label>
-                            <input type="text" id="edit_nombre_iglesia" required maxlength="100" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Nombre del Pastor:</label>
-                            <input type="text" id="edit_nombre_pastor" required maxlength="100" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Domicilio:</label>
-                            <input type="text" id="edit_domicilio" required maxlength="150" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">No. Telefónico:</label>
-                            <input type="text" id="edit_telefono" required maxlength="25" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Municipio, Estado:</label>
-                            <input type="text" id="edit_municipio_estado" required maxlength="100" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Fecha de Entrega:</label>
-                            <input type="date" id="edit_fecha_entrega" required class="form-control">
-                        </div>
+    <footer class="bg-slate-950 border-t border-slate-800/80 mt-8 py-5 text-slate-400 text-xs text-center sm:text-left">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div><span class="font-bold text-white">ITTSAT</span> © 2026 - Ingeniería Ambiental</div>
+            <div class="text-[11px] text-emerald-400"><i class="fa-solid fa-database mr-1"></i> Supabase Sincronizado</div>
+        </div>
+    </footer>
 
-                        <hr class="my-3">
-                        <h6 class="text-title-green fw-bold mb-1">Editar Listado Nominal por Edades</h6>
-                        <p class="text-muted small mb-3">Modifique los casilleros existentes o agregue nuevos completando la casilla en blanco:</p>
-
-                        <!-- CASILLEROS DINÁMICOS PARA MODAL DE EDICIÓN -->
-                        <div class="col-md-6">
-                            <label class="form-label text-success fw-bold">👧 Niñas (2 - 4 años)</label>
-                            <div id="edit_container_ninas_2_4"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-primary fw-bold">👦 Niños (2 - 4 años)</label>
-                            <div id="edit_container_ninos_2_4"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-success fw-bold">👧 Niñas (5 - 9 años)</label>
-                            <div id="edit_container_ninas_5_9"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-primary fw-bold">👦 Niños (5 - 9 años)</label>
-                            <div id="edit_container_ninos_5_9"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-success fw-bold">👧 Niñas (10 - 14 años)</label>
-                            <div id="edit_container_ninas_10_14"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label text-primary fw-bold">👦 Niños (10 - 14 años)</label>
-                            <div id="edit_container_ninos_10_14"></div>
-                        </div>
-
-                        <div class="col-12 text-end mt-4">
-                            <button type="submit" id="btn-guardar-edicion" class="btn btn-success btn-animated fw-bold px-4 w-100 w-md-auto">
-                                <i class="bi bi-save me-1"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </form>
-                </div>
+    <!-- MODAL DE CONTRASEÑA ADMIN -->
+    <div id="modal-auth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-xs w-full rounded-2xl border border-slate-700 p-5 shadow-2xl space-y-4 text-center relative">
+            <button onclick="closeAuthModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-10 h-10 rounded-xl bg-ittsat-gold/20 text-ittsat-gold flex items-center justify-center mx-auto text-lg border border-ittsat-gold/30">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-white text-sm">Panel Protegido</h3>
+                <p class="text-slate-400 text-[11px] mt-0.5">Introduce la contraseña de acceso.</p>
+            </div>
+            <div>
+                <input type="password" id="admin-pass-input" placeholder="Contraseña..." onkeyup="if(event.key==='Enter') verifyAdminPass()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-center text-white focus:outline-none focus:border-ai-cyan">
+            </div>
+            <div class="flex gap-2 pt-1">
+                <button onclick="closeAuthModal()" class="w-1/2 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold">Cancelar</button>
+                <button onclick="verifyAdminPass()" class="w-1/2 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">Entrar</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= MODAL 2: NOTIFICAR POR WHATSAPP ================= -->
-    <div class="modal fade" id="modalNotificarWhatsApp" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="modal-header bg-success text-white border-0">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-whatsapp me-2"></i>Notificar por WhatsApp al Pastor</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <!-- MODAL 1: TRASLADAR DE ZONA -->
+    <div id="modal-trasladar" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white text-slate-800 max-w-sm w-full rounded-2xl overflow-hidden shadow-2xl border border-slate-200">
+            <!-- Encabezado morado -->
+            <div class="bg-[#6d28d9] px-5 py-3.5 flex items-center justify-between text-white">
+                <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+                    <i class="fa-solid fa-right-left"></i>
+                    <span>Trasladar de Zona</span>
                 </div>
-                <div class="modal-body bg-white text-dark p-4">
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-secondary small">1. Destinatario y Teléfono:</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light fw-bold" id="wa-destinatario-nombre">Pastor</span>
-                                <input type="text" id="wa-telefono-destino" class="form-control bg-light" placeholder="Ej. 2941071402">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold text-secondary small">2. Tipo de Notificación:</label>
-                            <select id="wa-tipo-notificacion" onchange="generarMensajeWhatsApp()" class="form-select bg-light border-primary">
-                                <option value="faltante">📋 Solicitar Faltante de Datos</option>
-                                <option value="confirmacion">✅ Confirmación de Registro Recibido</option>
-                                <option value="recordatorio">📅 Recordatorio / Seguimiento de Entrega</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Casillas de selección (visibles cuando se selecciona Solicitar Faltante) -->
-                    <div id="wa-seccion-faltantes" class="mb-3">
-                        <label class="form-label fw-bold text-secondary small">Selecciona qué información falta:</label>
-                        <div class="p-3 border rounded-3 bg-light d-flex flex-wrap gap-3">
-                            <div class="form-check">
-                                <input class="form-check-input wa-check-faltante" type="checkbox" value="👧👦 Listado Nominal de Niños por edades" id="chk-listado" onchange="generarMensajeWhatsApp()">
-                                <label class="form-check-label fw-medium" for="chk-listado">👧👦 Listado de Niños</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input wa-check-faltante" type="checkbox" value="🏠 Dirección / Domicilio exacto de la iglesia" id="chk-domicilio" onchange="generarMensajeWhatsApp()">
-                                <label class="form-check-label fw-medium" for="chk-domicilio">🏠 Domicilio Iglesia</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input wa-check-faltante" type="checkbox" value="📞 Número telefónico de contacto actualizado" id="chk-telefono" onchange="generarMensajeWhatsApp()">
-                                <label class="form-check-label fw-medium" for="chk-telefono">📞 Teléfono / Contacto</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input wa-check-faltante" type="checkbox" value="📅 Confirmación de fecha de entrega" id="chk-fecha" onchange="generarMensajeWhatsApp()">
-                                <label class="form-check-label fw-medium" for="chk-fecha">📅 Fecha de Entrega</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-secondary small">Nota adicional (Opcional):</label>
-                        <input type="text" id="wa-nota-adicional" oninput="generarMensajeWhatsApp()" class="form-control bg-light" placeholder="Ej. Por favor enviar antes del viernes...">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold text-success small">3. Mensaje Final (Totalmente Editable):</label>
-                        <textarea id="wa-mensaje-final" rows="7" class="form-control font-monospace small bg-light border-success"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light border-0 d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" onclick="copiarMensajeWhatsApp()" class="btn btn-outline-success fw-bold">
-                        <i class="bi bi-clipboard me-1"></i> Copiar
-                    </button>
-                    <button type="button" onclick="enviarPorWhatsApp()" class="btn btn-whatsapp-custom fw-bold px-4">
-                        <i class="bi bi-whatsapp me-1"></i> Enviar
-                    </button>
-                </div>
+                <button onclick="closeTrasladarModal()" class="text-white/80 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
-        </div>
-    </div>
+            
+            <!-- Cuerpo del modal -->
+            <div class="p-5 space-y-4">
+                <input type="hidden" id="trasladar-record-id">
+                <p class="text-xs sm:text-sm text-slate-600">
+                    Registro / Iglesia seleccionada: <strong id="trasladar-record-name" class="text-slate-900 font-bold">---</strong>
+                </p>
+                
+                <div class="space-y-1.5">
+                    <label class="block text-xs sm:text-sm font-bold text-slate-800">Seleccione la Zona Destino:</label>
+                    <select id="trasladar-zona-select" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-slate-800 focus:outline-none focus:border-[#6d28d9] focus:ring-2 focus:ring-[#6d28d9]/20">
+                        <option value="San Andrés Tuxtla">San Andrés Tuxtla</option>
+                        <option value="Santiago Tuxtla">Santiago Tuxtla</option>
+                        <option value="Catemaco">Catemaco</option>
+                        <option value="Acayucan">Acayucan</option>
+                        <option value="Sayula de Alemán">Sayula de Alemán</option>
+                        <option value="Coatzacoalcos">Coatzacoalcos</option>
+                        <option value="Minatitlán">Minatitlán</option>
+                    </select>
+                </div>
 
-    <!-- ================= MODAL 3: TRASLADAR DE ZONA ================= -->
-    <div class="modal fade" id="modalTrasladarZona" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-                <div class="modal-header bg-purple-header border-0">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-arrow-left-right me-2"></i>Trasladar de Zona</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body bg-white text-dark p-4">
-                    <p class="mb-3">Iglesia seleccionada: <strong id="trasladar-nombre-iglesia" class="text-dark"></strong></p>
-                    <label class="form-label fw-bold">Seleccione la Zona Destino:</label>
-                    <select id="trasladar-zona-destino" class="form-select bg-light mb-3"></select>
-                    <div class="alert alert-warning small mb-0 py-2">
-                        <i class="bi bi-info-circle-fill me-1"></i> Al confirmar, esta iglesia y todo su listado de niños se moverán inmediatamente a la zona seleccionada.
-                    </div>
-                </div>
-                <div class="modal-footer bg-white border-0 pt-0 px-4 pb-4">
-                    <button type="button" id="btn-confirmar-traslado" onclick="confirmarTrasladoZona()" class="btn btn-trasladar-custom w-100 py-2 fw-bold rounded-3 shadow-sm">
+                <div class="pt-2">
+                    <button onclick="confirmarTraslado()" class="w-full py-2.5 rounded-xl bg-[#6d28d9] hover:bg-[#5b21b6] text-white font-bold text-xs sm:text-sm shadow-lg transition active:scale-95">
                         Confirmar Traslado
                     </button>
                 </div>
@@ -643,1044 +444,821 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- SCRIPTS DE FUNCIONALIDAD -->
-    <script>
-        let zonaActualId = null;
-        let iglesiaSeleccionada = null;
-        let datosIglesiasZona = [];
-
-        const LISTA_ZONAS = [
-            { id: 1, nombre: 'San Andrés' },
-            { id: 2, nombre: 'Tezonapa' },
-            { id: 3, nombre: 'Orizaba' },
-            { id: 4, nombre: 'Xalapa' },
-            { id: 5, nombre: 'Manlio' },
-            { id: 6, nombre: 'Medellín' },
-            { id: 7, nombre: 'Carlos A. Carrillo' }
-        ];
-
-        const CATEGORIAS_EDAD = [
-            { id: 'ninas_2_4', genero: 'niña', rango: '2-4' },
-            { id: 'ninos_2_4', genero: 'niño', rango: '2-4' },
-            { id: 'ninas_5_9', genero: 'niña', rango: '5-9' },
-            { id: 'ninos_5_9', genero: 'niño', rango: '5-9' },
-            { id: 'ninas_10_14', genero: 'niña', rango: '10-14' },
-            { id: 'ninos_10_14', genero: 'niño', rango: '10-14' }
-        ];
-
-        function sanitizarEnTiempoReal(str) {
-            if (!str) return '';
-            return str.replace(/[<>]/g, '');
-        }
-
-        function sanitizarTexto(str) {
-            if (!str) return '';
-            return str.replace(/[<>]/g, '').trim();
-        }
-
-        function inicializarInputsDinamicos(containerId, nombresIniciales = []) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-            const listaNombres = nombresIniciales.length > 0 ? nombresIniciales : [''];
-            listaNombres.forEach((nombre) => {
-                agregarFilaInput(container, sanitizarTexto(nombre));
-            });
-            asegurarFilaVaciaFinal(container);
-        }
-
-        function agregarFilaInput(container, valorInicial = '') {
-            const index = container.children.length + 1;
-            const divGroup = document.createElement('div');
-            divGroup.className = 'dynamic-input-group';
-            divGroup.innerHTML = `
-                <span class="badge bg-secondary badge-index text-white">${index}</span>
-                <input type="text" class="form-control input-perimetro dynamic-input" maxlength="100" placeholder="Nombre completo..." value="${sanitizarTexto(valorInicial)}">
-                <button type="button" class="btn btn-outline-danger btn-sm border-0" onclick="eliminarFilaInput(this)" title="Eliminar este casillero">
-                    <i class="bi bi-trash"></i>
+    <!-- MODAL 2: NOTIFICAR POR WHATSAPP -->
+    <div id="modal-whatsapp" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white text-slate-800 max-w-2xl w-full rounded-2xl overflow-hidden shadow-2xl border border-slate-200 my-auto">
+            <!-- Encabezado verde WhatsApp -->
+            <div class="bg-[#16a34a] px-5 py-3.5 flex items-center justify-between text-white">
+                <div class="flex items-center gap-2 font-bold text-sm sm:text-base">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>Notificar por WhatsApp y Mensaje Editable</span>
+                </div>
+                <button onclick="closeWhatsappModal()" class="text-white/80 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
-            `;
-            const input = divGroup.querySelector('input');
-            input.addEventListener('input', function() {
-                this.value = sanitizarEnTiempoReal(this.value);
-                asegurarFilaVaciaFinal(container);
-            });
-            container.appendChild(divGroup);
-            actualizarNumeracionInputs(container);
+            </div>
+
+            <!-- Cuerpo del modal -->
+            <div class="p-4 sm:p-6 space-y-4">
+                <input type="hidden" id="wa-record-id">
+
+                <!-- Fila 1: Destinatario y Tipo de Notificación -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">1. Enviar mensaje a:</label>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="wa-recipient-name" class="w-3/5 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium focus:outline-none focus:border-[#16a34a]" placeholder="Nombre Pastor">
+                            <input type="tel" id="wa-recipient-phone" class="w-2/5 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 font-mono focus:outline-none focus:border-[#16a34a]" placeholder="Teléfono">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">2. Tipo de Notificación:</label>
+                        <select id="wa-notification-type" onchange="generateWhatsappMessage()" class="w-full bg-white border border-blue-400 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-200">
+                            <option value="faltante">📋 Solicitar Faltante de Datos</option>
+                            <option value="recordatorio">⏰ Recordatorio de Entrega</option>
+                            <option value="confirmacion">✅ Confirmación de Registro Completo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fila 2: Casillas de información faltante -->
+                <div id="wa-missing-section" class="space-y-1.5">
+                    <label class="block text-xs font-bold text-slate-700">Selecciona qué información falta:</label>
+                    <div class="flex flex-wrap items-center gap-4 p-2.5 rounded-xl border border-slate-200 bg-slate-50/70 text-xs text-slate-700">
+                        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                            <input type="checkbox" value="📦 Cajas" onchange="generateWhatsappMessage()" class="wa-missing-chk w-4 h-4 rounded text-[#16a34a] focus:ring-[#16a34a]">
+                            <span>📦 Cajas</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                            <input type="checkbox" value="👥 Maestros" onchange="generateWhatsappMessage()" class="wa-missing-chk w-4 h-4 rounded text-[#16a34a] focus:ring-[#16a34a]">
+                            <span>👥 Maestros</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                            <input type="checkbox" value="👶 Guerreritos" onchange="generateWhatsappMessage()" class="wa-missing-chk w-4 h-4 rounded text-[#16a34a] focus:ring-[#16a34a]">
+                            <span>👶 Guerreritos</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                            <input type="checkbox" value="🛡️ Guerreros" onchange="generateWhatsappMessage()" class="wa-missing-chk w-4 h-4 rounded text-[#16a34a] focus:ring-[#16a34a]">
+                            <span>🛡️ Guerreros</span>
+                        </label>
+                        <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                            <input type="checkbox" value="📝 Datos de Encuesta / Correo" onchange="generateWhatsappMessage()" class="wa-missing-chk w-4 h-4 rounded text-[#16a34a] focus:ring-[#16a34a]">
+                            <span>📝 Datos de Encuesta</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Fila 3: Nota adicional -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nota adicional (Opcional):</label>
+                    <input type="text" id="wa-extra-note" oninput="generateWhatsappMessage()" placeholder="Ej. Por favor enviar antes del viernes..." class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#16a34a]">
+                </div>
+
+                <!-- Fila 4: Mensaje Final Editable -->
+                <div>
+                    <label class="block text-xs font-bold text-[#16a34a] mb-1">3. Mensaje Final (Totalmente Editable):</label>
+                    <textarea id="wa-final-message" rows="6" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-xs font-mono text-slate-800 leading-relaxed focus:outline-none focus:border-[#16a34a]"></textarea>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-200">
+                    <button onclick="closeWhatsappModal()" class="px-4 py-2 rounded-xl bg-slate-600 hover:bg-slate-700 text-white font-semibold text-xs transition">
+                        Cancelar
+                    </button>
+                    <button onclick="copyWhatsappMessage()" class="px-4 py-2 rounded-xl bg-white hover:bg-emerald-50 text-[#16a34a] border border-[#16a34a] font-bold text-xs flex items-center gap-1.5 transition">
+                        <i class="fa-regular fa-copy"></i> Copiar
+                    </button>
+                    <button onclick="sendWhatsappMessage()" class="px-5 py-2 rounded-xl bg-[#16a34a] hover:bg-[#15803d] text-white font-bold text-xs flex items-center gap-1.5 shadow-md transition active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> Enviar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-4 right-4 z-50 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none glass-card border border-emerald-500/50 text-white px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2.5 max-w-xs">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-base shrink-0"></i>
+        <div class="truncate">
+            <h4 id="toast-title" class="font-semibold text-xs">Éxito</h4>
+            <p id="toast-msg" class="text-[10px] text-slate-300 truncate">Operación completada.</p>
+        </div>
+    </div>
+
+    <!-- SCRIPT JS -->
+    <script>
+        const SUPABASE_URL = "https://zajkjffzopvbhubprico.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_C9f5B8ZJoDsW_ZvmWPLyQA_xGWAGLUj";
+        const ADMIN_PASSWORD = "admin123";
+        let isAdminAuthenticated = false;
+
+        function startApp() {
+            const intro = document.getElementById('intro-splash');
+            intro.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => { intro.style.display = 'none'; }, 700);
         }
 
-        function reindexarContainer(container) {
-            Array.from(container.children).forEach((group, idx) => {
-                const badge = group.querySelector('.badge-index');
-                if (badge) badge.innerText = idx + 1;
-            });
-        }
+        // Lista base predeterminada por si falla la red
+        let defaultQuestions = [
+            { id: 'q1', title: 'Menciona tu Zona o Grupo:', type: 'text', required: true, placeholder: 'Ej. San Andrés Tuxtla / 306 A' },
+            { id: 'q2', title: '¿Cuál es tu edad?', type: 'text', required: true, placeholder: 'Escribe aquí...' },
+            { id: 'q3', title: '¿Con qué género se identifica?', type: 'radio', required: true, options: ['H', 'M', 'Prefiero no decirlo'] },
+            { id: 'q4', title: '¿Utilizas herramientas de IA para optimizar tareas de Ingeniería Ambiental (ej. Modelado climático, análisis de calidad de agua/aire, gestión de residuos)?', type: 'checkbox', required: true, options: ['Siempre', 'Frecuentemente', 'Ocasionalmente', 'Nunca'] },
+            { id: 'q5', title: '¿Qué IA utilizas con más frecuencia en tu rubro?', type: 'checkbox', required: true, options: ['ChatGPT (OpenAI)', 'Perplexity', 'Microsoft Copilot', 'Google Gemini', 'Claude (Anthropic)', 'DeepSeek'] },
+            { id: 'q6', title: 'Al utilizar la IA para procesar datos ecológicos o de muestreo, ¿verificas los resultados mediante cálculos manuales o software tradicional validado?', type: 'radio', required: true, options: ['Siempre', 'Frecuentemente', 'Ocasionalmente', 'Nunca'] },
+            { id: 'q7', title: '¿Crees que delegar el diseño de sistemas de tratamiento o de impacto ambiental a una IA puede estancar tu capacidad de proponer soluciones innovadoras por ti mismo?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q8', title: '¿Consideras éticamente correcto incluir gráficos o simulaciones ambientales generadas por IA en un dictamen técnico sin especificar su origen?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q9', title: '¿Eres consciente de que los modelos de IA pueden tener sesgos geográficos o socioeconómicos que afecten la precisión de estudios de impacto ambiental en comunidades vulnerables?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q10', title: '¿Evitas subir bases de datos con coordenadas exactas de especies protegidas, zonas arqueológicas o datos confidenciales de empresas a herramientas de IA públicas?', type: 'radio', required: true, options: ['Siempre', 'Frecuentemente', 'Ocasionalmente', 'Nunca'] },
+            { id: 'q11', title: '¿Consideras que la responsabilidad final de una contingencia Ambiental provocada por un error de diseño asistido por IA recae enteramente en el ingeniero que firmó el proyecto?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q12', title: '¿Crees necesario que el colegio de ingenieros o las instituciones regulen el uso de IA en la elaboración de Manifestaciones de Impacto Ambiental (MIA)?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] },
+            { id: 'q13', title: '¿Consideras indispensable que los futuros Ingenieros Ambientales reciban formación obligatoria sobre el uso responsable de la IA y el sesgo de datos de la Tierra?', type: 'radio', required: true, options: ['Totalmente de acuerdo', 'De acuerdo', 'En desacuerdo', 'Totalmente en desacuerdo'] }
+        ];
 
-        function actualizarNumeracionInputs(container) {
-            reindexarContainer(container);
-        }
+        let questions = JSON.parse(localStorage.getItem('ittsat_ai_questions')) || defaultQuestions;
+        let responses = JSON.parse(localStorage.getItem('ittsat_ai_responses')) || [];
+        let chartFrecuenciaInstance = null;
+        let chartImpactoInstance = null;
 
-        function eliminarFilaInput(btn) {
-            const group = btn.closest('.dynamic-input-group');
-            const container = group.parentElement;
-            if (container.children.length === 1) {
-                const input = group.querySelector('input');
-                input.value = '';
-                return;
-            }
-            group.remove();
-            asegurarFilaVaciaFinal(container);
-            reindexarContainer(container);
-        }
-
-        function asegurarFilaVaciaFinal(container) {
-            const inputs = container.querySelectorAll('.dynamic-input');
-            if (inputs.length === 0) {
-                agregarFilaInput(container, '');
-                return;
-            }
-            const ultimoInput = inputs[inputs.length - 1];
-            if (ultimoInput.value.trim() !== '') {
-                agregarFilaInput(container, '');
-            }
-        }
-
-        function obtenerValoresContainer(containerId) {
-            const container = document.getElementById(containerId);
-            if(!container) return [];
-            const inputs = container.querySelectorAll('.dynamic-input');
-            let nombres = [];
-            inputs.forEach(input => {
-                const val = sanitizarTexto(input.value);
-                if (val !== '') {
-                    nombres.push(val);
-                }
-            });
-            return nombres;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            CATEGORIAS_EDAD.forEach(cat => {
-                inicializarInputsDinamicos(`container_${cat.id}`);
-            });
+        window.addEventListener('DOMContentLoaded', async () => {
+            initCarousel();
+            await fetchQuestionsFromSupabase();
+            await fetchResponsesFromSupabase();
         });
 
-        function obtenerLogoBase64() {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.crossOrigin = 'Anonymous';
-                img.src = 'img/logo.jpg';
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    resolve(canvas.toDataURL('image/jpeg'));
-                };
-                img.onerror = function () {
-                    resolve(null);
-                };
-            });
-        }
-
-        function cambiarVista(vista) {
-            document.getElementById('vista-form').classList.add('d-none');
-            document.getElementById('vista-admin').classList.add('d-none');
-            document.getElementById('vista-detalle').classList.add('d-none');
-            
-            document.getElementById('btn-form').className = "btn btn-outline-light btn-animated fw-bold opacity-75 w-100 w-lg-auto";
-            document.getElementById('btn-admin').className = "btn btn-outline-light btn-animated fw-bold opacity-75 w-100 w-lg-auto";
-
-            if(vista === 'form') {
-                document.getElementById('vista-form').classList.remove('d-none');
-                document.getElementById('btn-form').className = "btn btn-success btn-animated fw-bold w-100 w-lg-auto";
-            } else if(vista === 'admin') {
-                document.getElementById('vista-admin').classList.remove('d-none');
-                document.getElementById('btn-admin').className = "btn btn-success btn-animated fw-bold w-100 w-lg-auto";
-            }
-        }
-
-        async function guardarRegistro(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-guardar');
-            btn.disabled = true;
-            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Guardando concentrado...`;
-
+        async function fetchQuestionsFromSupabase() {
             try {
-                const zona_id = parseInt(document.getElementById('zona_id').value, 10);
-                const nombre_iglesia = sanitizarTexto(document.getElementById('nombre_iglesia').value);
-                const nombre_pastor = sanitizarTexto(document.getElementById('nombre_pastor').value);
-                const domicilio = sanitizarTexto(document.getElementById('domicilio').value);
-                const telefono = sanitizarTexto(document.getElementById('telefono').value);
-                const municipio_estado = sanitizarTexto(document.getElementById('municipio_estado').value);
-                const fecha_entrega = document.getElementById('fecha_entrega').value;
-
-                if (isNaN(zona_id) || zona_id < 1 || zona_id > 7) {
-                    throw new Error('Zona seleccionada no válida.');
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia?select=*&order=orden.asc`, {
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        questions = data.map(q => ({
+                            id: q.id,
+                            title: q.title,
+                            type: q.type,
+                            required: q.required,
+                            options: q.options || [],
+                            labelMin: q.label_min,
+                            labelMax: q.label_max,
+                            placeholder: q.placeholder
+                        }));
+                        localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions));
+                    } else {
+                        await syncAllQuestionsToSupabase();
+                    }
                 }
+            } catch (e) {
+                console.warn('Cargando preguntas locales:', e);
+            }
+            renderDynamicForm();
+        }
 
-                const { data: iglesiaData, error: iglesiaError } = await _supabase
-                    .from('iglesias')
-                    .insert([{ zona_id, nombre_iglesia, nombre_pastor, domicilio, telefono, municipio_estado, fecha_entrega }])
-                    .select();
-
-                if (iglesiaError) throw iglesiaError;
-                const iglesiaId = iglesiaData[0].id;
-
-                let ninosInserts = [];
-                CATEGORIAS_EDAD.forEach(cat => {
-                    const nombres = obtenerValoresContainer(`container_${cat.id}`);
-                    nombres.forEach(nombre => {
-                        ninosInserts.push({
-                            iglesia_id: iglesiaId,
-                            nombre_completo: nombre,
-                            genero: cat.genero,
-                            rango_edad: cat.rango
-                        });
-                    });
+        async function syncAllQuestionsToSupabase() {
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia?id=gt.0`, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
                 });
 
-                if(ninosInserts.length > 0) {
-                    const { error: ninosError } = await _supabase.from('ninos').insert(ninosInserts);
-                    if (ninosError) throw ninosError;
-                }
+                const payload = questions.map(q => ({
+                    id: q.id,
+                    title: q.title,
+                    type: q.type,
+                    required: q.required,
+                    options: q.options || [],
+                    label_min: q.labelMin || null,
+                    label_max: q.labelMax || null,
+                    placeholder: q.placeholder || null
+                }));
 
-                alert('¡Concentrado guardado exitosamente!');
-                document.getElementById('form-iglesia').reset();
-                CATEGORIAS_EDAD.forEach(cat => {
-                    inicializarInputsDinamicos(`container_${cat.id}`);
+                await fetch(`${SUPABASE_URL}/rest/v1/preguntas_ia`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` },
+                    body: JSON.stringify(payload)
                 });
             } catch (err) {
-                alert('Error al guardar: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> Guardar Concentrado General`;
+                console.error('Error al guardar en Supabase:', err);
             }
         }
 
-        async function verificarLogin() {
-            const zonaId = parseInt(document.getElementById('login-zona').value, 10);
-            const pass = document.getElementById('login-pass').value;
+        function switchView(view) {
+            const formView = document.getElementById('view-form');
+            const adminView = document.getElementById('view-admin');
+            const tabForm = document.getElementById('tab-form');
+            const tabAdmin = document.getElementById('tab-admin');
 
-            if (isNaN(zonaId)) {
-                alert('Seleccione una zona válida.');
-                return;
-            }
-
-            const { data, error } = await _supabase
-                .from('zonas')
-                .select('*')
-                .eq('id', zonaId)
-                .single();
-
-            if (error || !data) {
-                alert('Error al validar la zona.');
-                return;
-            }
-
-            if (data.password_admin === pass) {
-                zonaActualId = zonaId;
-                document.getElementById('titulo-zona-admin').innerHTML = `<i class="bi bi-speedometer2 me-2"></i>Panel de Administración`;
-                document.getElementById('subtitulo-zona').innerText = `Zona activa: ${data.nombre_zona.toUpperCase()}`;
-                document.getElementById('admin-login').classList.add('d-none');
-                document.getElementById('admin-dashboard').classList.remove('d-none');
-                cargarDatosAdmin();
+            if (view === 'form') {
+                formView.classList.remove('hidden');
+                adminView.classList.add('hidden');
+                tabForm.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 bg-gradient-to-r from-ittsat-green to-emerald-600 text-white shadow-md";
+                tabAdmin.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
             } else {
-                alert('Contraseña incorrecta para esta zona.');
+                if (!isAdminAuthenticated) { openAuthModal(); return; }
+                formView.classList.add('hidden');
+                adminView.classList.remove('hidden');
+                tabAdmin.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 bg-gradient-to-r from-ittsat-wine to-ai-purple text-white shadow-md";
+                tabForm.className = "px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 text-slate-400 hover:text-white";
+                updateDashboard();
             }
         }
 
-        function cerrarSesion() {
-            zonaActualId = null;
-            document.getElementById('login-pass').value = '';
-            document.getElementById('admin-dashboard').classList.add('d-none');
-            document.getElementById('admin-login').classList.remove('d-none');
+        function openAuthModal() { document.getElementById('modal-auth').classList.remove('hidden'); document.getElementById('admin-pass-input').focus(); }
+        function closeAuthModal() { document.getElementById('modal-auth').classList.add('hidden'); document.getElementById('admin-pass-input').value = ''; }
+        function verifyAdminPass() {
+            if (document.getElementById('admin-pass-input').value === ADMIN_PASSWORD) {
+                isAdminAuthenticated = true;
+                closeAuthModal();
+                showToast('Acceso Concedido', 'Bienvenido al panel.', 'success');
+                switchView('admin');
+            } else { showToast('Acceso Denegado', 'Contraseña incorrecta.', 'error'); }
         }
 
-        async function cargarDatosAdmin() {
-            if (!zonaActualId) return;
-            const { data: iglesias, error } = await _supabase
-                .from('iglesias')
-                .select('*, ninos(*)')
-                .eq('zona_id', zonaActualId);
+        function switchAdminTab(tab) {
+            const dashContent = document.getElementById('admin-dash-content');
+            const builderContent = document.getElementById('admin-builder-content');
+            const subtabDash = document.getElementById('subtab-dash');
+            const subtabBuilder = document.getElementById('subtab-builder');
 
-            if (error) {
-                alert('Error al cargar los datos.');
-                return;
+            if (tab === 'dash') {
+                dashContent.classList.remove('hidden');
+                builderContent.classList.add('hidden');
+                subtabDash.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-ai-cyan shadow";
+                subtabBuilder.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white";
+                updateDashboard();
+            } else {
+                dashContent.classList.add('hidden');
+                builderContent.classList.remove('hidden');
+                subtabBuilder.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-ai-cyan shadow";
+                subtabDash.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white";
+                renderAdminQuestionsList();
             }
-
-            datosIglesiasZona = iglesias;
-            filtrarIglesias();
         }
 
-        function limpiarFiltros() {
-            document.getElementById('buscador-iglesias').value = '';
-            document.getElementById('filtro-fecha-inicio').value = '';
-            document.getElementById('filtro-fecha-fin').value = '';
-            document.getElementById('filtro-orden').value = 'nombre-asc';
-            filtrarIglesias();
-        }
-
-        function filtrarIglesias() {
-            const query = sanitizarTexto(document.getElementById('buscador-iglesias').value).toLowerCase();
-            const fechaInicio = document.getElementById('filtro-fecha-inicio').value;
-            const fechaFin = document.getElementById('filtro-fecha-fin').value;
-            const orden = document.getElementById('filtro-orden').value;
-
-            let filtradas = datosIglesiasZona.filter(iglesia => {
-                let coincideTexto = 
-                    iglesia.nombre_iglesia.toLowerCase().includes(query) ||
-                    iglesia.nombre_pastor.toLowerCase().includes(query) ||
-                    iglesia.municipio_estado.toLowerCase().includes(query);
-
-                let coincideFecha = true;
-                if (fechaInicio && iglesia.fecha_entrega < fechaInicio) coincideFecha = false;
-                if (fechaFin && iglesia.fecha_entrega > fechaFin) coincideFecha = false;
-
-                return coincideTexto && coincideFecha;
-            });
-
-            filtradas.sort((a, b) => {
-                if (orden === 'nombre-asc') {
-                    return a.nombre_iglesia.localeCompare(b.nombre_iglesia);
-                } else if (orden === 'fecha-reciente') {
-                    return new Date(b.fecha_entrega) - new Date(a.fecha_entrega);
-                } else if (orden === 'infantes-mayor') {
-                    return b.ninos.length - a.ninos.length;
-                }
-                return 0;
-            });
-
-            renderizarDashboard(filtradas);
-        }
-
-        function renderizarDashboard(listaIglesias) {
-            const contenedorCatalogo = document.getElementById('lista-iglesias-catalogo');
-            const tarjetasTotales = document.getElementById('tarjetas-totales');
-            contenedorCatalogo.innerHTML = '';
-
-            let totalCajitas = 0;
-            datosIglesiasZona.forEach(iglesia => {
-                totalCajitas += iglesia.ninos.length;
-            });
-
-            if (listaIglesias.length === 0) {
-                contenedorCatalogo.innerHTML = '<p class="text-muted text-center py-3">No se encontraron iglesias registradas con esos filtros.</p>';
+        let currentSlide = 0;
+        let slideInterval;
+        function initCarousel() { startCarouselAutoPlay(); }
+        function updateCarousel() {
+            document.getElementById('carousel-slides').style.transform = `translateX(-${currentSlide * 100}%)`;
+            const dots = document.getElementById('carousel-dots').children;
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = i === currentSlide ? "w-4 h-2 rounded-full bg-ai-cyan transition-all" : "w-2 h-2 rounded-full bg-white/40 transition-all";
             }
+        }
+        function nextSlide() { currentSlide = (currentSlide + 1) % 3; updateCarousel(); resetCarouselInterval(); }
+        function prevSlide() { currentSlide = (currentSlide - 1 + 3) % 3; updateCarousel(); resetCarouselInterval(); }
+        function goToSlide(index) { currentSlide = index; updateCarousel(); resetCarouselInterval(); }
+        function startCarouselAutoPlay() { slideInterval = setInterval(nextSlide, 5000); }
+        function resetCarouselInterval() { clearInterval(slideInterval); startCarouselAutoPlay(); }
 
-            listaIglesias.forEach(iglesia => {
-                let totalIglesia = iglesia.ninos.length;
+        function renderDynamicForm() {
+            const container = document.getElementById('dynamic-questions-container');
+            container.innerHTML = '';
 
-                const colDiv = document.createElement('div');
-                colDiv.className = 'col-md-6';
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = "glass-card rounded-2xl p-4 sm:p-6 border border-slate-800 space-y-3";
 
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'border rounded-4 p-3 bg-light h-100 shadow-sm btn-animated d-flex flex-column justify-content-between';
-                cardDiv.style.cursor = 'pointer';
-                cardDiv.onclick = () => verDetalleIglesia(iglesia.id);
-
-                const topContent = document.createElement('div');
-                topContent.innerHTML = `
-                    <span class="badge bg-success mb-2"><i class="bi bi-calendar-check me-1"></i> Entrega: ${iglesia.fecha_entrega}</span>
-                    <h4 class="h5 fw-bold text-success mb-1"></h4>
-                    <p class="text-secondary small mb-1"><i class="bi bi-person-fill me-1"></i> Pastor: <strong></strong></p>
-                    <p class="text-muted small mb-0"><i class="bi bi-geo-alt-fill me-1"></i> <span></span></p>
-                `;
-                topContent.querySelector('h4').textContent = iglesia.nombre_iglesia;
-                topContent.querySelector('strong').textContent = iglesia.nombre_pastor;
-                topContent.querySelector('span').textContent = iglesia.municipio_estado;
-
-                const bottomContent = document.createElement('div');
-                bottomContent.className = 'mt-3 pt-2 border-top d-flex justify-content-between align-items-center flex-wrap gap-2';
-                bottomContent.innerHTML = `
-                    <span class="fw-bold text-dark small"><i class="bi bi-people-fill text-success me-1"></i> Total infantes: ${totalIglesia}</span>
-                    <span class="text-success fw-bold small">Gestionar y ver detalles <i class="bi bi-arrow-right"></i></span>
+                let html = `
+                    <div class="flex items-start justify-between gap-2">
+                        <label class="block text-xs sm:text-sm font-semibold text-white leading-snug">
+                            <span class="text-ai-cyan mr-1">${index + 1}.</span> ${q.title}
+                            ${q.required ? '<span class="text-rose-400 ml-1">*</span>' : ''}
+                        </label>
+                    </div>
                 `;
 
-                cardDiv.appendChild(topContent);
-                cardDiv.appendChild(bottomContent);
-                colDiv.appendChild(cardDiv);
-                contenedorCatalogo.appendChild(colDiv);
-            });
-
-            tarjetasTotales.innerHTML = `
-                <div class="col-12 col-md-4">
-                    <div class="card bg-success text-white p-3 rounded-4 shadow h-100 d-flex flex-row align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-uppercase small opacity-75 mb-1">Iglesias</h6>
-                            <p class="h2 fw-bold mb-0">${datosIglesiasZona.length}</p>
-                        </div>
-                        <i class="bi bi-house-door-fill fs-1 opacity-50"></i>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="card bg-primary text-white p-3 rounded-4 shadow h-100 d-flex flex-row align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-uppercase small opacity-75 mb-1">Cajitas / Niños</h6>
-                            <p class="h2 fw-bold mb-0">${totalCajitas}</p>
-                        </div>
-                        <i class="bi bi-box-seam-fill fs-1 opacity-50"></i>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4">
-                    <div class="card bg-dark text-white p-3 rounded-4 shadow h-100 border border-success d-flex flex-row align-items-center justify-content-between">
-                        <div>
-                            <h6 class="text-uppercase small opacity-75 mb-1">Maestros / Pastores</h6>
-                            <p class="h2 fw-bold mb-0">${datosIglesiasZona.length}</p>
-                        </div>
-                        <i class="bi bi-person-badge-fill fs-1 opacity-50 text-success"></i>
-                    </div>
-                </div>
-            `;
-        }
-
-        function verDetalleIglesia(id) {
-            iglesiaSeleccionada = datosIglesiasZona.find(i => i.id === id);
-            if(!iglesiaSeleccionada) return;
-
-            document.getElementById('vista-admin').classList.add('d-none');
-            document.getElementById('vista-detalle').classList.remove('d-none');
-
-            let ninas24 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '2-4');
-            let ninos24 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '2-4');
-            let ninas59 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '5-9');
-            let ninos59 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '5-9');
-            let ninas1014 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '10-14');
-            let ninos1014 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '10-14');
-
-            let totalNinas = ninas24.length + ninas59.length + ninas1014.length;
-            let totalNinos = ninos24.length + ninos59.length + ninos1014.length;
-            let totalGlobal = totalNinas + totalNinos;
-
-            let maxLen = Math.max(ninas24.length, ninos24.length, ninas59.length, ninos59.length, ninas1014.length, ninos1014.length, 1);
-
-            let htmlTablaNombres = '';
-            for(let i=0; i<maxLen; i++) {
-                let n1 = ninas24[i] ? document.createTextNode(ninas24[i].nombre_completo).nodeValue : '';
-                let n2 = ninos24[i] ? document.createTextNode(ninos24[i].nombre_completo).nodeValue : '';
-                let n3 = ninas59[i] ? document.createTextNode(ninas59[i].nombre_completo).nodeValue : '';
-                let n4 = ninos59[i] ? document.createTextNode(ninos59[i].nombre_completo).nodeValue : '';
-                let n5 = ninas1014[i] ? document.createTextNode(ninas1014[i].nombre_completo).nodeValue : '';
-                let n6 = ninos1014[i] ? document.createTextNode(ninos1014[i].nombre_completo).nodeValue : '';
-
-                htmlTablaNombres += `
-                    <tr>
-                        <td class="text-center fw-bold">${i+1}</td>
-                        <td>${n1}</td>
-                        <td>${n2}</td>
-                        <td>${n3}</td>
-                        <td>${n4}</td>
-                        <td>${n5}</td>
-                        <td>${n6}</td>
-                    </tr>
-                `;
-            }
-
-            const detalleContenedor = document.getElementById('detalle-contenido-iglesia');
-            detalleContenedor.innerHTML = `
-                <div class="border p-3 bg-white rounded shadow-sm">
-                    <div class="row border-bottom pb-2 mb-2">
-                        <div class="col-12"><strong class="text-dark">NOMBRE DE LA IGLESIA:</strong> <span class="text-success fw-bold" id="det-iglesia"></span></div>
-                        <div class="col-md-6"><strong class="text-dark">NOMBRE DEL PASTOR:</strong> <span id="det-pastor"></span></div>
-                        <div class="col-md-6"><strong class="text-dark">DOMICILIO:</strong> <span id="det-domicilio"></span></div>
-                        <div class="col-md-6"><strong class="text-dark">NO. TELÉFONO Y CELULAR:</strong> <span id="det-tel"></span></div>
-                        <div class="col-md-6"><strong class="text-dark">MUNICIPIO, ESTADO:</strong> <span id="det-mun"></span></div>
-                        <div class="col-12"><strong class="text-dark">FECHA DE ENTREGA DE LA LISTA:</strong> <span id="det-fecha"></span></div>
-                    </div>
-
-                    <div class="table-responsive mb-3">
-                        <table class="table table-bordered table-sm text-center align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th rowspan="2" class="align-middle">EDADES<br>NIÑAS (OS)</th>
-                                    <th>2-4</th>
-                                    <th>5-9</th>
-                                    <th>10-14</th>
-                                    <th>TOTAL</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="fw-bold text-start ps-3">NIÑAS</td>
-                                    <td>${ninas24.length}</td>
-                                    <td>${ninas59.length}</td>
-                                    <td>${ninas1014.length}</td>
-                                    <td class="fw-bold">${totalNinas}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold text-start ps-3">NIÑOS</td>
-                                    <td>${ninos24.length}</td>
-                                    <td>${ninos59.length}</td>
-                                    <td>${ninos1014.length}</td>
-                                    <td class="fw-bold">${totalNinos}</td>
-                                </tr>
-                                <tr class="table-light">
-                                    <td class="fw-bold text-start ps-3">TOTAL POR EDADES</td>
-                                    <td>${ninas24.length + ninos24.length}</td>
-                                    <td>${ninas59.length + ninos59.length}</td>
-                                    <td>${ninas1014.length + ninos1014.length}</td>
-                                    <td class="fw-bold">${totalGlobal}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="p-2 bg-light border fw-bold text-end">TOTAL GENERAL: ${totalGlobal}</div>
-                    </div>
-
-                    <hr class="my-3">
-                    <h4 class="h6 fw-bold text-dark mb-2">LISTADO NOMINAL DE NIÑOS PARTICIPANTES</h4>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-sm text-xs bg-white">
-                            <thead class="table-success text-dark">
-                                <tr>
-                                    <th class="text-center">#</th>
-                                    <th>👧 Niñas (2-4)</th>
-                                    <th>👦 Niños (2-4)</th>
-                                    <th>👧 Niñas (5-9)</th>
-                                    <th>👦 Niños (5-9)</th>
-                                    <th>👧 Niñas (10-14)</th>
-                                    <th>👦 Niños (10-14)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${htmlTablaNombres}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('det-iglesia').textContent = iglesiaSeleccionada.nombre_iglesia;
-            document.getElementById('det-pastor').textContent = iglesiaSeleccionada.nombre_pastor;
-            document.getElementById('det-domicilio').textContent = iglesiaSeleccionada.domicilio;
-            document.getElementById('det-tel').textContent = iglesiaSeleccionada.telefono;
-            document.getElementById('det-mun').textContent = iglesiaSeleccionada.municipio_estado;
-            document.getElementById('det-fecha').textContent = iglesiaSeleccionada.fecha_entrega;
-        }
-
-        function volverAlAdmin() {
-            document.getElementById('vista-detalle').classList.add('d-none');
-            document.getElementById('vista-admin').classList.remove('d-none');
-            cargarDatosAdmin();
-        }
-
-        // ================= FUNCIONES: NOTIFICAR POR WHATSAPP =================
-        function abrirModalNotificarWhatsApp() {
-            if (!iglesiaSeleccionada) return;
-            document.getElementById('wa-destinatario-nombre').textContent = `Pastor: ${iglesiaSeleccionada.nombre_pastor}`;
-            document.getElementById('wa-telefono-destino').value = (iglesiaSeleccionada.telefono || '').replace(/\D/g, '');
-            document.getElementById('wa-tipo-notificacion').value = 'faltante';
-            document.getElementById('wa-nota-adicional').value = '';
-
-            // Reiniciar checkboxes
-            document.querySelectorAll('.wa-check-faltante').forEach(chk => chk.checked = false);
-
-            // Auto-marcar listado si no tiene niños registrados
-            if (!iglesiaSeleccionada.ninos || iglesiaSeleccionada.ninos.length === 0) {
-                document.getElementById('chk-listado').checked = true;
-            }
-
-            generarMensajeWhatsApp();
-            const modal = new bootstrap.Modal(document.getElementById('modalNotificarWhatsApp'));
-            modal.show();
-        }
-
-        function generarMensajeWhatsApp() {
-            if (!iglesiaSeleccionada) return;
-            const tipo = document.getElementById('wa-tipo-notificacion').value;
-            const seccionFaltantes = document.getElementById('wa-seccion-faltantes');
-            const nota = sanitizarTexto(document.getElementById('wa-nota-adicional').value);
-            const pastor = iglesiaSeleccionada.nombre_pastor;
-            const iglesia = iglesiaSeleccionada.nombre_iglesia;
-            const totalNinos = iglesiaSeleccionada.ninos ? iglesiaSeleccionada.ninos.length : 0;
-
-            let mensaje = `¡Dios le bendiga Pastor ${pastor}!\nLe saludamos de *Operación Niño de la Navidad (Samaritan's Purse)*.\n\n`;
-
-            if (tipo === 'faltante') {
-                seccionFaltantes.classList.remove('d-none');
-                mensaje += `Le escribimos para solicitar respetuosamente complementar la información de su iglesia *${iglesia}*.\n\n`;
-                
-                const seleccionados = Array.from(document.querySelectorAll('.wa-check-faltante:checked')).map(c => `• ${c.value}`);
-                if (seleccionados.length > 0) {
-                    mensaje += `Actualmente nos falta la siguiente información:\n${seleccionados.join('\n')}\n\n`;
-                } else {
-                    mensaje += `Actualmente nos falta complementar algunos datos de su registro.\n\n`;
-                }
-            } else if (tipo === 'confirmacion') {
-                seccionFaltantes.classList.add('d-none');
-                mensaje += `Le confirmamos que hemos recibido correctamente el concentrado de su iglesia *${iglesia}* con un total de *${totalNinos} niños registrados*.\n\n`;
-            } else if (tipo === 'recordatorio') {
-                seccionFaltantes.classList.add('d-none');
-                mensaje += `Le recordamos el seguimiento de entrega programado para el día *${iglesiaSeleccionada.fecha_entrega}* correspondiente a su iglesia *${iglesia}*.\n\n`;
-            }
-
-            if (nota !== '') {
-                mensaje += `📝 *Nota adicional:* ${nota}\n\n`;
-            }
-
-            mensaje += `Quedamos a sus órdenes. ¡Muchas bendiciones! 🎁`;
-            document.getElementById('wa-mensaje-final').value = mensaje;
-        }
-
-        function copiarMensajeWhatsApp() {
-            const textarea = document.getElementById('wa-mensaje-final');
-            textarea.select();
-            navigator.clipboard.writeText(textarea.value);
-            alert('¡Mensaje copiado al portapapeles!');
-        }
-
-        function enviarPorWhatsApp() {
-            let telefono = document.getElementById('wa-telefono-destino').value.replace(/\D/g, '');
-            const mensaje = document.getElementById('wa-mensaje-final').value;
-
-            if (!telefono) {
-                alert('Por favor ingrese un número telefónico válido.');
-                return;
-            }
-
-            // Si tiene 10 dígitos (México), agregar código de país 52
-            if (telefono.length === 10) {
-                telefono = '52' + telefono;
-            }
-
-            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
-        }
-
-        // ================= FUNCIONES: TRASLADAR DE ZONA =================
-        function abrirModalTrasladarZona() {
-            if (!iglesiaSeleccionada) return;
-            document.getElementById('trasladar-nombre-iglesia').textContent = iglesiaSeleccionada.nombre_iglesia;
-            
-            const selectDestino = document.getElementById('trasladar-zona-destino');
-            selectDestino.innerHTML = '';
-
-            LISTA_ZONAS.forEach(zona => {
-                if (zona.id !== iglesiaSeleccionada.zona_id) {
-                    const option = document.createElement('option');
-                    option.value = zona.id;
-                    option.textContent = zona.nombre;
-                    selectDestino.appendChild(option);
-                }
-            });
-
-            const modal = new bootstrap.Modal(document.getElementById('modalTrasladarZona'));
-            modal.show();
-        }
-
-        async function confirmarTrasladoZona() {
-            if (!iglesiaSeleccionada) return;
-            const nuevaZonaId = parseInt(document.getElementById('trasladar-zona-destino').value, 10);
-            const btn = document.getElementById('btn-confirmar-traslado');
-
-            if (isNaN(nuevaZonaId)) {
-                alert('Seleccione una zona de destino válida.');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Trasladando...`;
-
-            try {
-                const { error } = await _supabase
-                    .from('iglesias')
-                    .update({ zona_id: nuevaZonaId })
-                    .eq('id', iglesiaSeleccionada.id);
-
-                if (error) throw error;
-
-                const zonaDestinoObj = LISTA_ZONAS.find(z => z.id === nuevaZonaId);
-                alert(`¡La iglesia "${iglesiaSeleccionada.nombre_iglesia}" ha sido trasladada exitosamente a la zona ${zonaDestinoObj ? zonaDestinoObj.nombre : ''}!`);
-                
-                bootstrap.Modal.getInstance(document.getElementById('modalTrasladarZona')).hide();
-                volverAlAdmin();
-            } catch (err) {
-                alert('Error al trasladar la iglesia: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `Confirmar Traslado`;
-            }
-        }
-
-        // ================= EDICIÓN Y ELIMINACIÓN =================
-        function abrirModalEdicionIglesia() {
-            if(!iglesiaSeleccionada) return;
-            document.getElementById('edit_nombre_iglesia').value = iglesiaSeleccionada.nombre_iglesia;
-            document.getElementById('edit_nombre_pastor').value = iglesiaSeleccionada.nombre_pastor;
-            document.getElementById('edit_domicilio').value = iglesiaSeleccionada.domicilio;
-            document.getElementById('edit_telefono').value = iglesiaSeleccionada.telefono;
-            document.getElementById('edit_municipio_estado').value = iglesiaSeleccionada.municipio_estado;
-            document.getElementById('edit_fecha_entrega').value = iglesiaSeleccionada.fecha_entrega;
-
-            CATEGORIAS_EDAD.forEach(cat => {
-                const nombresCat = iglesiaSeleccionada.ninos
-                    .filter(n => n.genero === cat.genero && n.rango_edad === cat.rango)
-                    .map(n => n.nombre_completo);
-
-                inicializarInputsDinamicos(`edit_container_${cat.id}`, nombresCat);
-            });
-
-            const modal = new bootstrap.Modal(document.getElementById('modalEditarIglesia'));
-            modal.show();
-        }
-
-        async function guardarEdicionIglesia(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-guardar-edicion');
-            btn.disabled = true;
-            btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span> Guardando cambios...`;
-
-            try {
-                const nombre_iglesia = sanitizarTexto(document.getElementById('edit_nombre_iglesia').value);
-                const nombre_pastor = sanitizarTexto(document.getElementById('edit_nombre_pastor').value);
-                const domicilio = sanitizarTexto(document.getElementById('edit_domicilio').value);
-                const telefono = sanitizarTexto(document.getElementById('edit_telefono').value);
-                const municipio_estado = sanitizarTexto(document.getElementById('edit_municipio_estado').value);
-                const fecha_entrega = document.getElementById('edit_fecha_entrega').value;
-
-                const { error: errorIglesia } = await _supabase
-                    .from('iglesias')
-                    .update({ nombre_iglesia, nombre_pastor, domicilio, telefono, municipio_estado, fecha_entrega })
-                    .eq('id', iglesiaSeleccionada.id);
-
-                if (errorIglesia) throw errorIglesia;
-
-                await _supabase.from('ninos').delete().eq('iglesia_id', iglesiaSeleccionada.id);
-
-                let ninosInserts = [];
-                CATEGORIAS_EDAD.forEach(cat => {
-                    const nombres = obtenerValoresContainer(`edit_container_${cat.id}`);
-                    nombres.forEach(nombre => {
-                        ninosInserts.push({
-                            iglesia_id: iglesiaSeleccionada.id,
-                            nombre_completo: nombre,
-                            genero: cat.genero,
-                            rango_edad: cat.rango
-                        });
+                if (q.type === 'radio') {
+                    html += `<div class="space-y-2 pt-1">`;
+                    (q.options || []).forEach((opt) => {
+                        const optText = typeof opt === 'object' ? opt.name : opt;
+                        html += `
+                            <label class="flex items-center gap-2.5 p-2.5 sm:p-3 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer border border-slate-800/80 transition">
+                                <input type="radio" name="${q.id}" value="${optText}" ${q.required ? 'required' : ''} class="w-4 h-4 text-emerald-500 bg-slate-950 border-slate-700 shrink-0">
+                                <span class="text-xs text-slate-200">${optText}</span>
+                            </label>
+                        `;
                     });
-                });
-
-                if(ninosInserts.length > 0) {
-                    const { error: errorNinos } = await _supabase.from('ninos').insert(ninosInserts);
-                    if (errorNinos) throw errorNinos;
+                    html += `</div>`;
+                } 
+                else if (q.type === 'checkbox') {
+                    html += `<div class="space-y-2 pt-1">`;
+                    (q.options || []).forEach((opt) => {
+                        const isObj = typeof opt === 'object';
+                        const optText = isObj ? opt.name : opt;
+                        let badgesHtml = '';
+                        if (isObj && opt.icons) {
+                            badgesHtml = `<div class="flex items-center gap-1 ml-auto shrink-0">`;
+                            opt.icons.forEach(badge => {
+                                badgesHtml += `<span class="inline-flex items-center gap-0.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full border ${badge.color}"><i class="${badge.icon}"></i> ${badge.label}</span>`;
+                            });
+                            badgesHtml += `</div>`;
+                        }
+                        html += `
+                            <label class="flex items-center gap-2.5 p-2.5 sm:p-3 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer border border-slate-800/80 transition">
+                                <input type="checkbox" name="${q.id}" value="${optText}" class="w-4 h-4 rounded text-emerald-500 bg-slate-950 border-slate-700 shrink-0">
+                                <span class="text-xs text-slate-200 font-medium">${optText}</span>
+                                ${badgesHtml}
+                            </label>
+                        `;
+                    });
+                    html += `</div>`;
+                } 
+                else if (q.type === 'scale') {
+                    html += `
+                        <div class="pt-1">
+                            <div class="flex justify-between items-center px-1 mb-1.5 text-[10px] text-slate-400">
+                                <span>${q.labelMin || 'Mín'}</span>
+                                <span>${q.labelMax || 'Máx'}</span>
+                            </div>
+                            <div class="grid grid-cols-5 gap-1.5">
+                                ${[1, 2, 3, 4, 5].map(num => `
+                                    <label class="flex flex-col items-center gap-1 p-2 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-ai-cyan cursor-pointer transition text-center">
+                                        <span class="text-xs font-bold text-white">${num}</span>
+                                        <input type="radio" name="${q.id}" value="${num}" ${q.required ? 'required' : ''} class="w-3.5 h-3.5 text-ai-cyan bg-slate-950 border-slate-700">
+                                    </label>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                } 
+                else if (q.type === 'text') {
+                    html += `
+                        <div class="pt-1">
+                            <textarea name="${q.id}" rows="2.5" ${q.required ? 'required' : ''} placeholder="${q.placeholder || 'Escribe aquí...'}" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-ai-cyan"></textarea>
+                        </div>
+                    `;
                 }
 
-                const { data: iglesiaActualizada, error: errReload } = await _supabase
-                    .from('iglesias')
-                    .select('*, ninos(*)')
-                    .eq('id', iglesiaSeleccionada.id)
-                    .single();
-
-                if (!errReload) {
-                    iglesiaSeleccionada = iglesiaActualizada;
-                }
-
-                alert('¡Cambios guardados exitosamente!');
-                bootstrap.Modal.getInstance(document.getElementById('modalEditarIglesia')).hide();
-                verDetalleIglesia(iglesiaSeleccionada.id);
-            } catch (err) {
-                alert('Error al actualizar: ' + err.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="bi bi-save me-1"></i> Guardar Cambios`;
-            }
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
         }
 
-        async function eliminarIglesia() {
-            if(!iglesiaSeleccionada) return;
-            if(!confirm(`¿Está totalmente seguro de eliminar la iglesia "${iglesiaSeleccionada.nombre_iglesia}" y todos sus niños registrados?`)) {
-                return;
-            }
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            const answers = {};
 
+            questions.forEach(q => {
+                if (q.type === 'radio' || q.type === 'scale') {
+                    const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+                    answers[q.id] = checked ? checked.value : '';
+                } else if (q.type === 'checkbox') {
+                    const checkboxes = document.querySelectorAll(`input[name="${q.id}"]:checked`);
+                    answers[q.id] = Array.from(checkboxes).map(c => c.value);
+                } else if (q.type === 'text') {
+                    const txt = document.querySelector(`textarea[name="${q.id}"]`);
+                    answers[q.id] = txt ? txt.value : '';
+                }
+            });
+
+            const emailVal = document.getElementById('user_email').value;
+            const nameInput = document.getElementById('user_name').value.trim();
+            const phoneInput = document.getElementById('user_phone').value.trim();
+            const groupVal = answers['q1'] || 'San Andrés Tuxtla';
+            const finalName = nameInput || (emailVal ? emailVal.split('@')[0] : 'Participante');
+
+            // Guardamos teléfono dentro del JSON de respuestas para compatibilidad total con Supabase
+            answers._telefono = phoneInput;
+
+            const newResponse = {
+                id: 'res_' + Date.now(),
+                date: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
+                userData: {
+                    name: finalName,
+                    phone: phoneInput,
+                    email: emailVal,
+                    semester: groupVal,
+                    aiLevel: document.getElementById('user_ai_level').value
+                },
+                answers: answers
+            };
+
+            responses.push(newResponse);
+            localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses));
+            await sendToSupabaseSilently(newResponse);
+
+            showToast('¡Registrado!', 'Datos guardados correctamente.', 'success');
+            document.getElementById('poll-form').reset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function sendToSupabaseSilently(record) {
             try {
-                await _supabase.from('ninos').delete().eq('iglesia_id', iglesiaSeleccionada.id);
-                const { error } = await _supabase.from('iglesias').delete().eq('id', iglesiaSeleccionada.id);
-
-                if (error) throw error;
-
-                alert('Iglesia eliminada correctamente.');
-                volverAlAdmin();
-            } catch (err) {
-                alert('Error al eliminar: ' + err.message);
-            }
+                await fetch(`${SUPABASE_URL}/rest/v1/respuestas_ia`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Prefer': 'return=minimal' },
+                    body: JSON.stringify({
+                        nombre: record.userData.name,
+                        email: record.userData.email,
+                        semestre: record.userData.semester,
+                        nivel_ia: record.userData.aiLevel,
+                        respuestas_json: record.answers,
+                        creado_el: new Date().toISOString()
+                    })
+                });
+            } catch (err) { console.warn(err); }
         }
 
-        // ================= EXPORTACIONES PDF Y EXCEL =================
-        function renderEncabezadoIglesia(doc, iglesia, logoBase64, startY, titulo) {
-            if (logoBase64) {
-                doc.addImage(logoBase64, 'JPEG', 14, startY, 20, 20);
-            }
-            
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(11);
-            doc.text(titulo, 110, startY + 6, { align: 'center' });
-            doc.setFontSize(8);
-            doc.setFont("helvetica", "normal");
-            doc.text("Operation Christmas Samaritan's Purse", 110, startY + 11, { align: 'center' });
-
-            let municipiosEstado = (iglesia.municipio_estado || '').split(',');
-            let municipio = municipiosEstado[0] ? municipiosEstado[0].trim() : '';
-            let estado = municipiosEstado[1] ? municipiosEstado[1].trim() : '';
-
-            let y = startY + 22;
-            doc.setFontSize(7.5);
-
-            let yLeft = y;
-            let yRight = y;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("NOMBRE DE LA IGLESIA:", 14, yLeft);
-            doc.setFont("helvetica", "normal");
-            let lineasIglesia = doc.splitTextToSize(iglesia.nombre_iglesia || "", 45);
-            doc.text(lineasIglesia, 52, yLeft);
-            yLeft += lineasIglesia.length * 3.5;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("NOMBRE DEL PASTOR:", 14, yLeft);
-            doc.setFont("helvetica", "normal");
-            let lineasPastor = doc.splitTextToSize(iglesia.nombre_pastor || "", 48);
-            doc.text(lineasPastor, 48, yLeft);
-            yLeft += lineasPastor.length * 3.5;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("DOMICILIO:", 14, yLeft);
-            doc.setFont("helvetica", "normal");
-            let lineasDomicilio = doc.splitTextToSize(iglesia.domicilio || "", 62);
-            doc.text(lineasDomicilio, 32, yLeft);
-            yLeft += lineasDomicilio.length * 3.5;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("TELÉFONO:", 110, yRight);
-            doc.setFont("helvetica", "normal");
-            doc.text(iglesia.telefono || "", 130, yRight);
-            yRight += 4;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("MUNICIPIO:", 110, yRight);
-            doc.setFont("helvetica", "normal");
-            let lineasMuni = doc.splitTextToSize(municipio, 40);
-            doc.text(lineasMuni, 130, yRight);
-            
-            doc.setFont("helvetica", "bold");
-            doc.text("EST.:", 172, yRight);
-            doc.setFont("helvetica", "normal");
-            doc.text(estado, 181, yRight);
-            yRight += lineasMuni.length * 3.5;
-
-            doc.setFont("helvetica", "bold");
-            doc.text("ENTREGA:", 110, yRight);
-            doc.setFont("helvetica", "normal");
-            doc.text(iglesia.fecha_entrega || "", 130, yRight);
-            yRight += 4;
-
-            let maxY = Math.max(yLeft, yRight);
-            return maxY + 2;
-        }
-
-        function renderBloqueConcentrado(doc, iglesia, logoBase64, startY) {
-            let finalY = renderEncabezadoIglesia(doc, iglesia, logoBase64, startY, "CONCENTRADO GENERAL DE NIÑOS POR IGLESIA");
-
-            let ninas24 = iglesia.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '2-4').length;
-            let ninos24 = iglesia.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '2-4').length;
-            let ninas59 = iglesia.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '5-9').length;
-            let ninos59 = iglesia.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '5-9').length;
-            let ninas1014 = iglesia.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '10-14').length;
-            let ninos1014 = iglesia.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '10-14').length;
-
-            let totNinas = ninas24 + ninas59 + ninas1014;
-            let totNinos = ninos24 + ninos59 + ninos1014;
-
-            doc.autoTable({
-                startY: finalY + 2,
-                head: [['EDADES', '2-4', '5-9', '10-14', 'TOTAL']],
-                body: [
-                    ['NIÑAS', ninas24, ninas59, ninas1014, totNinas],
-                    ['NIÑOS', ninos24, ninos59, ninos1014, totNinos],
-                    ['TOTAL POR EDADES', ninas24 + ninos24, ninas59 + ninos59, ninas1014 + ninos1014, totNinas + totNinos]
-                ],
-                theme: 'grid',
-                headStyles: { fillColor: [40, 167, 69], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-                styles: { fontSize: 8, halign: 'center', cellPadding: 1.5 },
-                columnStyles: { 0: { halign: 'left', fontStyle: 'bold', cellWidth: 45 } }
-            });
-
-            return doc.lastAutoTable.finalY;
-        }
-
-        function renderBloqueListado(doc, iglesia, logoBase64, startY, incluirEncabezado = true) {
-            let finalY = startY;
-            if (incluirEncabezado) {
-                finalY = renderEncabezadoIglesia(doc, iglesia, logoBase64, startY, "LISTADO GENERAL DE NIÑOS POR IGLESIA");
-            }
-
-            let ninas24 = iglesia.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '2-4');
-            let ninos24 = iglesia.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '2-4');
-            let ninas59 = iglesia.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '5-9');
-            let ninos59 = iglesia.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '5-9');
-            let ninas1014 = iglesia.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '10-14');
-            let ninos1014 = iglesia.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '10-14');
-
-            let rowsNominal = [];
-
-            rowsNominal.push([{ content: 'NIÑOS 2-4', colSpan: 4, styles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold', halign: 'center' } }]);
-            let max24 = Math.max(ninas24.length, ninos24.length);
-            for (let i = 0; i < max24; i++) {
-                rowsNominal.push([i + 1, ninos24[i] ? ninos24[i].nombre_completo : '', i + 1, ninas24[i] ? ninas24[i].nombre_completo : '']);
-            }
-
-            rowsNominal.push([{ content: 'NIÑOS 5-9', colSpan: 4, styles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold', halign: 'center' } }]);
-            let max59 = Math.max(ninas59.length, ninos59.length);
-            for (let i = 0; i < max59; i++) {
-                rowsNominal.push([i + 1, ninos59[i] ? ninos59[i].nombre_completo : '', i + 1, ninas59[i] ? ninas59[i].nombre_completo : '']);
-            }
-
-            rowsNominal.push([{ content: 'NIÑOS 10-14', colSpan: 4, styles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold', halign: 'center' } }]);
-            let max1014 = Math.max(ninas1014.length, ninos1014.length);
-            for (let i = 0; i < max1014; i++) {
-                rowsNominal.push([i + 1, ninos1014[i] ? ninos1014[i].nombre_completo : '', i + 1, ninas1014[i] ? ninas1014[i].nombre_completo : '']);
-            }
-
-            doc.autoTable({
-                startY: finalY + 2,
-                head: [['#', 'NIÑOS', '#', 'NIÑAS']],
-                body: rowsNominal,
-                theme: 'grid',
-                headStyles: { fillColor: [40, 167, 69], textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center' },
-                styles: { fontSize: 7, cellPadding: 1 },
-                columnStyles: {
-                    0: { cellWidth: 8, halign: 'center' },
-                    1: { cellWidth: 83 },
-                    2: { cellWidth: 8, halign: 'center' },
-                    3: { cellWidth: 83 }
+        async function fetchResponsesFromSupabase() {
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/respuestas_ia?select=*`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+                if (res.ok) {
+                    const data = await res.json();
+                    if(data && data.length > 0) {
+                        responses = data.map(item => {
+                            const ans = item.respuestas_json || {};
+                            return {
+                                id: item.id,
+                                date: new Date(item.creado_el || Date.now()).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }),
+                                userData: {
+                                    name: item.nombre || 'Participante',
+                                    phone: ans._telefono || '',
+                                    email: item.email,
+                                    semester: item.semestre || 'San Andrés Tuxtla',
+                                    aiLevel: item.nivel_ia || 'Principiante'
+                                },
+                                answers: ans
+                            };
+                        });
+                        localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses));
+                        updateDashboard();
+                    }
                 }
-            });
-
-            return doc.lastAutoTable.finalY;
+            } catch (e) { console.log('Respaldo local activo.'); }
         }
 
-        async function descargarGeneralConcentradoPDF() {
-            if (!datosIglesiasZona || datosIglesiasZona.length === 0) {
-                alert('No hay iglesias registradas en esta zona.');
+        function updateDashboard() {
+            const total = responses.length;
+            document.getElementById('kpi-total').textContent = total;
+            if (total === 0) {
+                document.getElementById('kpi-frecuencia').textContent = '0%';
+                document.getElementById('kpi-confianza').textContent = '0.0';
+                document.getElementById('kpi-top-tool').textContent = 'N/A';
+                renderTableResponses();
                 return;
             }
 
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            let logoBase64 = await obtenerLogoBase64();
-
-            for (let i = 0; i < datosIglesiasZona.length; i += 2) {
-                if (i > 0) doc.addPage();
-                renderBloqueConcentrado(doc, datosIglesiasZona[i], logoBase64, 10);
-                if (i + 1 < datosIglesiasZona.length) {
-                    renderBloqueConcentrado(doc, datosIglesiasZona[i + 1], logoBase64, 150);
+            let frecuentesCount = 0, toolsCount = {};
+            
+            responses.forEach(r => {
+                const ans = r.answers || {};
+                const freqVal = Object.values(ans).find(v => typeof v === 'string' && (v.includes('Siempre') || v.includes('Diariamente') || v.includes('Frecuentemente')));
+                if (freqVal && (freqVal.includes('Siempre') || freqVal.includes('Frecuentemente'))) {
+                    frecuentesCount++;
                 }
-            }
-            doc.save(`General_Concentrado_Zona_${zonaActualId}.pdf`);
-        }
 
-        async function descargarGeneralListadoPDF() {
-            if (!datosIglesiasZona || datosIglesiasZona.length === 0) {
-                alert('No hay iglesias registradas en esta zona.');
-                return;
-            }
-
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            let logoBase64 = await obtenerLogoBase64();
-
-            for (let index = 0; index < datosIglesiasZona.length; index++) {
-                if (index > 0) doc.addPage();
-                renderBloqueListado(doc, datosIglesiasZona[index], logoBase64, 10, true);
-            }
-            doc.save(`General_Listado_Zona_${zonaActualId}.pdf`);
-        }
-
-        async function descargarPDFMasterZona() {
-            if (!datosIglesiasZona || datosIglesiasZona.length === 0) {
-                alert('No hay iglesias registradas en esta zona.');
-                return;
-            }
-
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            let logoBase64 = await obtenerLogoBase64();
-
-            for (let index = 0; index < datosIglesiasZona.length; index++) {
-                if (index > 0) doc.addPage();
-                let iglesia = datosIglesiasZona[index];
-                let lastY = renderBloqueConcentrado(doc, iglesia, logoBase64, 10);
-                renderBloqueListado(doc, iglesia, logoBase64, lastY + 8, false);
-            }
-            doc.save(`Mezcla_Concentrado_y_Listado_Zona_${zonaActualId}.pdf`);
-        }
-
-        function descargarExcelMasterZona() {
-            let wb = XLSX.utils.book_new();
-            let wsData = [["NIÑAS", "", "NIÑOS"]];
-
-            datosIglesiasZona.forEach(iglesia => {
-                wsData.push([`IGLESIA: ${iglesia.nombre_iglesia}`]);
-                iglesia.ninos.forEach(n => {
-                    wsData.push([n.genero === 'niña' ? n.nombre_completo : '', '', n.genero === 'niño' ? n.nombre_completo : '']);
+                Object.values(ans).forEach(val => {
+                    if (Array.isArray(val)) {
+                        val.forEach(t => { toolsCount[t] = (toolsCount[t] || 0) + 1; });
+                    }
                 });
             });
 
-            let ws = XLSX.utils.aoa_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, "Master Zona Agrupado");
-            XLSX.writeFile(wb, `Master_Zona_${zonaActualId}_Edades.xlsx`);
+            document.getElementById('kpi-frecuencia').textContent = `${Math.round((frecuentesCount / total) * 100)}%`;
+            document.getElementById('kpi-confianza').textContent = '4.2';
+            
+            let topTool = 'ChatGPT (OpenAI)', maxCount = 0;
+            for (let tool in toolsCount) { 
+                if (toolsCount[tool] > maxCount) { maxCount = toolsCount[tool]; topTool = tool; } 
+            }
+            document.getElementById('kpi-top-tool').textContent = topTool.replace(' (OpenAI)', '');
+
+            renderCharts();
+            renderTableResponses();
         }
 
-        async function descargarPDFIglesia() {
-            if(!iglesiaSeleccionada) return;
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-            let logoBase64 = await obtenerLogoBase64();
+        function renderCharts() {
+            const frecMap = { 'Siempre': 0, 'Frecuentemente': 0, 'Ocasionalmente': 0, 'Nunca': 0 };
+            const impactoMap = {};
 
-            let lastY = renderBloqueConcentrado(doc, iglesiaSeleccionada, logoBase64, 10);
-            renderBloqueListado(doc, iglesiaSeleccionada, logoBase64, lastY + 8, false);
-            doc.save(`${iglesiaSeleccionada.nombre_iglesia}_Oficial.pdf`);
+            responses.forEach(r => {
+                const ans = r.answers || {};
+                Object.values(ans).forEach(val => {
+                    if (typeof val === 'string') {
+                        if (val.includes('Siempre')) frecMap['Siempre']++;
+                        else if (val.includes('Frecuentemente')) frecMap['Frecuentemente']++;
+                        else if (val.includes('Ocasionalmente')) frecMap['Ocasionalmente']++;
+                        else if (val.includes('Nunca')) frecMap['Nunca']++;
+                    } else if (Array.isArray(val)) {
+                        val.forEach(item => {
+                            impactoMap[item] = (impactoMap[item] || 0) + 1;
+                        });
+                    }
+                });
+            });
+
+            const ctxFrec = document.getElementById('chart-frecuencia').getContext('2d');
+            if (chartFrecuenciaInstance) chartFrecuenciaInstance.destroy();
+            chartFrecuenciaInstance = new Chart(ctxFrec, {
+                type: 'doughnut',
+                data: { 
+                    labels: Object.keys(frecMap), 
+                    datasets: [{ data: Object.values(frecMap), backgroundColor: ['#00f2fe', '#198754', '#c5a059', '#6b1d2f'], borderWidth: 0 }] 
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 9 }, boxWidth: 10 } } } }
+            });
+
+            const impactKeys = Object.keys(impactoMap).length > 0 ? Object.keys(impactoMap) : ['ChatGPT', 'Copilot', 'Gemini', 'Perplexity'];
+            const impactValues = Object.keys(impactoMap).length > 0 ? Object.values(impactoMap) : [50, 40, 35, 25];
+
+            const ctxImp = document.getElementById('chart-impacto').getContext('2d');
+            if (chartImpactoInstance) chartImpactoInstance.destroy();
+            chartImpactoInstance = new Chart(ctxImp, {
+                type: 'bar',
+                data: { 
+                    labels: impactKeys.map(l => l.length > 15 ? l.substring(0, 15) + '...' : l), 
+                    datasets: [{ data: impactValues, backgroundColor: '#198754', borderRadius: 4 }] 
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#94a3b8', font: { size: 8 } }, grid: { display: false } }, y: { ticks: { color: '#94a3b8', stepSize: 5 }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+            });
         }
 
-        function descargarExcelIglesia() {
-            if(!iglesiaSeleccionada) return;
-            let wb = XLSX.utils.book_new();
-            let wsData = [
-                ["CONCENTRADO GENERAL DE NIÑOS POR IGLESIA"],
-                ["NOMBRE DE LA IGLESIA:", iglesiaSeleccionada.nombre_iglesia],
-                ["NOMBRE DEL PASTOR:", iglesiaSeleccionada.nombre_pastor],
-                ["DOMICILIO:", iglesiaSeleccionada.domicilio],
-                ["NO. TELÉFONO:", iglesiaSeleccionada.telefono],
-                ["MUNICIPIO, ESTADO:", iglesiaSeleccionada.municipio_estado],
-                ["FECHA DE ENTREGA:", iglesiaSeleccionada.fecha_entrega],
-                [],
-                ["#", "Niñas 2-4", "Niños 2-4", "Niñas 5-9", "Niños 5-9", "Niñas 10-14", "Niños 10-14"]
-            ];
+        function renderTableResponses() {
+            const tbody = document.getElementById('table-responses-body');
+            const filterZona = document.getElementById('filter-zona') ? document.getElementById('filter-zona').value : 'ALL';
+            tbody.innerHTML = '';
 
-            let ninas24 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '2-4');
-            let ninos24 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '2-4');
-            let ninas59 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '5-9');
-            let ninos59 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '5-9');
-            let ninas1014 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niña' && n.rango_edad === '10-14');
-            let ninos1014 = iglesiaSeleccionada.ninos.filter(n => n.genero === 'niño' && n.rango_edad === '10-14');
-            let maxLen = Math.max(ninas24.length, ninos24.length, ninas59.length, ninos59.length, ninas1014.length, ninos1014.length, 1);
+            const filteredResponses = responses.filter(r => {
+                if (filterZona === 'ALL') return true;
+                return (r.userData.semester || '').toLowerCase().includes(filterZona.toLowerCase());
+            });
 
-            for(let i=0; i<maxLen; i++) {
-                wsData.push([
-                    i+1,
-                    ninas24[i] ? ninas24[i].nombre_completo : '',
-                    ninos24[i] ? ninos24[i].nombre_completo : '',
-                    ninas59[i] ? ninas59[i].nombre_completo : '',
-                    ninos59[i] ? ninos59[i].nombre_completo : '',
-                    ninas1014[i] ? ninas1014[i].nombre_completo : '',
-                    ninos1014[i] ? ninos1014[i].nombre_completo : ''
-                ]);
+            if (filteredResponses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-500">Sin registros en esta zona.</td></tr>`;
+                return;
             }
 
-            let ws = XLSX.utils.aoa_to_sheet(wsData);
-            XLSX.utils.book_append_sheet(wb, ws, "Concentrado Iglesia");
-            XLSX.writeFile(wb, `${iglesiaSeleccionada.nombre_iglesia}_concentrado.xlsx`);
+            filteredResponses.forEach((r, i) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-900/50 transition";
+                const phoneDisplay = r.userData.phone ? `<div class="text-[11px] text-emerald-400 font-mono"><i class="fa-solid fa-phone text-[9px] mr-1"></i>${r.userData.phone}</div>` : `<div class="text-[10px] text-rose-400 italic">Sin teléfono</div>`;
+
+                tr.innerHTML = `
+                    <td class="p-2.5 font-mono text-slate-500">${i + 1}</td>
+                    <td class="p-2.5">
+                        <div class="font-semibold text-white">${r.userData.name || 'Participante'}</div>
+                        ${phoneDisplay}
+                    </td>
+                    <td class="p-2.5 text-slate-400">${r.userData.email || 'Sin correo'}</td>
+                    <td class="p-2.5">
+                        <span class="px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700 text-slate-200 font-medium text-[11px]">
+                            <i class="fa-solid fa-location-dot text-rose-400 mr-1"></i>${r.userData.semester}
+                        </span>
+                    </td>
+                    <td class="p-2.5 text-ai-cyan">${(r.userData.aiLevel || '').split(' ')[0]}</td>
+                    <td class="p-2.5 text-slate-500 text-[10px]">${r.date}</td>
+                    <td class="p-2.5">
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-1.5">
+                            <button onclick="openWhatsappModal('${r.id}')" class="w-full sm:w-auto px-3 py-1 rounded-full bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow transition active:scale-95">
+                                <i class="fa-brands fa-whatsapp text-xs"></i> Notificar
+                            </button>
+                            <button onclick="openTrasladarModal('${r.id}')" class="w-full sm:w-auto px-3 py-1 rounded-full bg-[#6d28d9] hover:bg-[#5b21b6] text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow transition active:scale-95">
+                                <i class="fa-solid fa-right-left text-[10px]"></i> Trasladar
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ==========================================
+        // FUNCIONES DE TRASLADO ENTRE ZONAS
+        // ==========================================
+        function openTrasladarModal(recordId) {
+            const record = responses.find(r => String(r.id) === String(recordId));
+            if (!record) return;
+
+            document.getElementById('trasladar-record-id').value = record.id;
+            document.getElementById('trasladar-record-name').textContent = record.userData.name || 'Registro';
+            
+            const selectEl = document.getElementById('trasladar-zona-select');
+            const currentZone = record.userData.semester || 'San Andrés Tuxtla';
+            
+            // Si la zona actual no está en el select, la agregamos temporalmente
+            let exists = Array.from(selectEl.options).some(opt => opt.value === currentZone);
+            if (!exists && currentZone) {
+                const newOpt = new Option(currentZone, currentZone);
+                selectEl.add(newOpt);
+            }
+            selectEl.value = currentZone;
+
+            document.getElementById('modal-trasladar').classList.remove('hidden');
+        }
+
+        function closeTrasladarModal() {
+            document.getElementById('modal-trasladar').classList.add('hidden');
+        }
+
+        async function confirmarTraslado() {
+            const recordId = document.getElementById('trasladar-record-id').value;
+            const nuevaZona = document.getElementById('trasladar-zona-select').value;
+
+            const recordIndex = responses.findIndex(r => String(r.id) === String(recordId));
+            if (recordIndex === -1) return;
+
+            // Actualizar localmente
+            responses[recordIndex].userData.semester = nuevaZona;
+            if (responses[recordIndex].answers) {
+                responses[recordIndex].answers['q1'] = nuevaZona;
+            }
+            localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses));
+
+            // Actualizar en Supabase si tiene ID numérico/real de BD
+            try {
+                if (!String(recordId).startsWith('res_')) {
+                    await fetch(`${SUPABASE_URL}/rest/v1/respuestas_ia?id=eq.${recordId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        },
+                        body: JSON.stringify({
+                            semestre: nuevaZona,
+                            respuestas_json: responses[recordIndex].answers
+                        })
+                    });
+                }
+            } catch (err) {
+                console.warn('No se pudo actualizar en la nube, guardado localmente:', err);
+            }
+
+            closeTrasladarModal();
+            renderTableResponses();
+            showToast('Traslado Exitoso', `Registro movido a ${nuevaZona}.`, 'success');
+        }
+
+        // ==========================================
+        // FUNCIONES DE NOTIFICACIÓN POR WHATSAPP
+        // ==========================================
+        function openWhatsappModal(recordId) {
+            const record = responses.find(r => String(r.id) === String(recordId));
+            if (!record) return;
+
+            document.getElementById('wa-record-id').value = record.id;
+            document.getElementById('wa-recipient-name').value = record.userData.name || '';
+            document.getElementById('wa-recipient-phone').value = record.userData.phone || '';
+            document.getElementById('wa-notification-type').value = 'faltante';
+            document.getElementById('wa-extra-note').value = '';
+
+            // Limpiar checkboxes previos
+            document.querySelectorAll('.wa-missing-chk').forEach(chk => chk.checked = false);
+
+            generateWhatsappMessage();
+            document.getElementById('modal-whatsapp').classList.remove('hidden');
+        }
+
+        function closeWhatsappModal() {
+            document.getElementById('modal-whatsapp').classList.add('hidden');
+        }
+
+        function generateWhatsappMessage() {
+            const recordId = document.getElementById('wa-record-id').value;
+            const record = responses.find(r => String(r.id) === String(recordId));
+            const pastorName = document.getElementById('wa-recipient-name').value.trim() || 'Pastor';
+            const zonaName = record ? (record.userData.semester || 'su congregación') : 'su congregación';
+            const notifType = document.getElementById('wa-notification-type').value;
+            const extraNote = document.getElementById('wa-extra-note').value.trim();
+
+            const missingSection = document.getElementById('wa-missing-section');
+            const selectedMissing = Array.from(document.querySelectorAll('.wa-missing-chk:checked')).map(c => `• ${c.value}`);
+
+            let msg = `¡Dios le bendiga Pastor *${pastorName}*!\n`;
+            msg += `Le saludamos cordialmente.\n\n`;
+
+            if (notifType === 'faltante') {
+                missingSection.classList.remove('hidden');
+                msg += `Le escribimos para solicitar respetuosamente complementar la información correspondiente a la zona/iglesia *${zonaName}*.\n\n`;
+                if (selectedMissing.length > 0) {
+                    msg += `Actualmente nos falta la siguiente información:\n${selectedMissing.join('\n')}\n\n`;
+                } else {
+                    msg += `Actualmente nos falta la siguiente información:\n• (Seleccione arriba los datos faltantes)\n\n`;
+                }
+            } else if (notifType === 'recordatorio') {
+                missingSection.classList.add('hidden');
+                msg += `Le enviamos un atento recordatorio respecto al seguimiento y entrega de datos de *${zonaName}*.\n\n`;
+            } else if (notifType === 'confirmacion') {
+                missingSection.classList.add('hidden');
+                msg += `Le confirmamos que hemos recibido satisfactoriamente toda la información de *${zonaName}*. ¡Muchas gracias por su apoyo!\n\n`;
+            }
+
+            if (extraNote) {
+                msg += `📌 *Nota:* ${extraNote}\n\n`;
+            }
+
+            msg += `Quedamos a sus órdenes. ¡Bendiciones!`;
+
+            document.getElementById('wa-final-message').value = msg;
+        }
+
+        function copyWhatsappMessage() {
+            const textarea = document.getElementById('wa-final-message');
+            textarea.select();
+            navigator.clipboard.writeText(textarea.value).then(() => {
+                showToast('Copiado', 'Mensaje copiado al portapapeles.', 'success');
+            });
+        }
+
+        function sendWhatsappMessage() {
+            let phone = document.getElementById('wa-recipient-phone').value.replace(/\D/g, '');
+            const message = document.getElementById('wa-final-message').value.trim();
+
+            if (!phone) {
+                showToast('Falta Teléfono', 'Ingresa un número de WhatsApp válido.', 'error');
+                document.getElementById('wa-recipient-phone').focus();
+                return;
+            }
+
+            // Si tiene 10 dígitos (México), anteponer código de país 52
+            if (phone.length === 10) {
+                phone = '52' + phone;
+            }
+
+            const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(waUrl, '_blank');
+        }
+
+        // ==========================================
+        // EXPORTAR EXCEL Y LIMPIAR
+        // ==========================================
+        function exportToExcel() {
+            if (responses.length === 0) return showToast('Aviso', 'No hay datos para exportar.', 'error');
+            
+            const excelData = responses.map((r, i) => {
+                const row = { 
+                    'No.': i + 1, 
+                    'Nombre / Pastor': r.userData.name || 'Participante', 
+                    'Teléfono': r.userData.phone || 'N/A',
+                    'Correo': r.userData.email, 
+                    'Zona / Grupo': r.userData.semester, 
+                    'Nivel IA': r.userData.aiLevel, 
+                    'Fecha': r.date 
+                };
+
+                const answers = r.answers || {};
+                
+                questions.forEach((q, qIndex) => {
+                    const qKey = `q${qIndex + 1}`;
+                    const answerValue = answers[q.id] !== undefined ? answers[q.id] : (answers[qKey] !== undefined ? answers[qKey] : 'N/A');
+                    row[`P${qIndex + 1}: ${q.title}`] = Array.isArray(answerValue) ? answerValue.join(', ') : answerValue;
+                });
+
+                return row;
+            });
+
+            const worksheet = XLSX.utils.json_to_sheet(excelData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Registros IA");
+            XLSX.writeFile(workbook, `Concentrado_IA_${Date.now()}.xlsx`);
+            showToast('Exportado', 'Archivo Excel descargado con éxito.', 'success');
+        }
+
+        function clearResponses() {
+            if (confirm('¿Borrar historial local?')) { responses = []; localStorage.setItem('ittsat_ai_responses', JSON.stringify(responses)); updateDashboard(); showToast('Limpieza', 'Historial borrado.', 'success'); }
+        }
+
+        // ==========================================
+        // EDITOR DE PREGUNTAS
+        // ==========================================
+        function renderAdminQuestionsList() {
+            const container = document.getElementById('admin-questions-list');
+            container.innerHTML = '';
+            questions.forEach((q, index) => {
+                const box = document.createElement('div');
+                box.className = "glass-card p-4 rounded-xl border border-slate-800 space-y-3";
+                let optionsEditorHtml = '';
+                if (q.type === 'radio' || q.type === 'checkbox') {
+                    optionsEditorHtml = `<div class="space-y-1.5 pt-2 border-t border-slate-800"><label class="block text-[11px] font-semibold text-slate-300">Opciones:</label>${(q.options || []).map((opt, oIdx) => `<div class="flex items-center gap-2"><input type="text" value="${typeof opt === 'object' ? opt.name : opt}" onchange="updateQuestionOption('${q.id}', ${oIdx}, this.value)" class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white"><button onclick="removeQuestionOption('${q.id}', ${oIdx})" class="px-2 py-1 bg-rose-600/20 text-rose-400 rounded text-xs"><i class="fa-solid fa-xmark"></i></button></div>`).join('')}<button onclick="addQuestionOption('${q.id}')" class="text-xs text-ai-cyan mt-1"><i class="fa-solid fa-plus"></i> Añadir opción</button></div>`;
+                }
+                box.innerHTML = `<div class="flex justify-between items-center border-b border-slate-800 pb-2"><span class="text-xs font-bold text-ittsat-gold">#${index + 1}</span><button onclick="deleteQuestion('${q.id}')" class="px-2 py-0.5 rounded bg-rose-600/20 text-rose-400 text-xs"><i class="fa-solid fa-trash-can"></i></button></div><div><label class="block text-[11px] text-slate-400 mb-1">Título:</label><input type="text" value="${q.title}" onchange="updateQuestionTitle('${q.id}', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white"></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><div><label class="block text-[11px] text-slate-400 mb-1">Tipo:</label><select onchange="updateQuestionType('${q.id}', this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white"><option value="radio" ${q.type==='radio'?'selected':''}>Opción Única</option><option value="checkbox" ${q.type==='checkbox'?'selected':''}>Casillas</option><option value="scale" ${q.type==='scale'?'selected':''}>Escala</option><option value="text" ${q.type==='text'?'selected':''}>Texto</option></select></div><div class="flex items-center pt-3"><label class="flex items-center gap-1.5 text-xs text-slate-300"><input type="checkbox" ${q.required?'checked':''} onchange="toggleQuestionRequired('${q.id}', this.checked)" class="rounded text-emerald-500 bg-slate-900"> Obligatoria</label></div></div>${optionsEditorHtml}`;
+                container.appendChild(box);
+            });
+        }
+
+        async function saveQuestionsState() {
+            localStorage.setItem('ittsat_ai_questions', JSON.stringify(questions));
+            renderDynamicForm();
+            await syncAllQuestionsToSupabase();
+        }
+
+        async function addNewQuestion() { questions.push({ id: 'q_' + Date.now(), title: 'Nueva pregunta', type: 'radio', required: false, options: ['Opción 1', 'Opción 2'] }); await saveQuestionsState(); renderAdminQuestionsList(); showToast('Creada', 'Pregunta guardada globalmente.', 'success'); }
+        async function deleteQuestion(id) { questions = questions.filter(q => q.id !== id); await saveQuestionsState(); renderAdminQuestionsList(); showToast('Eliminada', 'Pregunta removida globalmente.', 'success'); }
+        async function updateQuestionTitle(id, val) { const q = questions.find(i => i.id === id); if (q) { q.title = val; await saveQuestionsState(); } }
+        async function updateQuestionType(id, type) { const q = questions.find(i => i.id === id); if (q) { q.type = type; if((type==='radio'||type==='checkbox')&&(!q.options||!q.options.length))q.options=['A','B']; await saveQuestionsState(); renderAdminQuestionsList(); } }
+        async function toggleQuestionRequired(id, val) { const q = questions.find(i => i.id === id); if (q) { q.required = val; await saveQuestionsState(); } }
+        async function updateQuestionOption(qId, oIdx, val) { const q = questions.find(i => i.id === qId); if (q && q.options) { if (typeof q.options[oIdx] === 'object') q.options[oIdx].name = val; else q.options[oIdx] = val; await saveQuestionsState(); } }
+        async function addQuestionOption(qId) { const q = questions.find(i => i.id === qId); if (q) { if (!q.options) q.options = []; q.options.push(`Opción ${q.options.length + 1}`); await saveQuestionsState(); renderAdminQuestionsList(); } }
+        async function removeQuestionOption(qId, oIdx) { const q = questions.find(i => i.id === qId); if (q && q.options && q.options.length > 1) { q.options.splice(oIdx, 1); await saveQuestionsState(); renderAdminQuestionsList(); } }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
         }
     </script>
 </body>
